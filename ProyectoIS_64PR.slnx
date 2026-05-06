@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="BE/BE_64PR.csproj" Id="5617d18d-5092-478a-b619-b3adb88bbfc2" />
+  <Project Path="BLL_64PR/BLL_64PR.csproj" Id="a744f8d5-c890-4362-89e0-b603579a601c" />
+  <Project Path="DAL_64PR/DAL_64PR.csproj" Id="e990023a-fd21-4606-8fbe-e91ee7e8fd96" />
+  <Project Path="ProyectoIS_64PR/ProyectoIS_64PR.csproj" Id="9588eeec-6ca7-43df-820e-06a0f3423a0e" />
+  <Project Path="Servicios_64PR/Servicios_64PR.csproj" Id="dab0e4e6-15e9-47f7-8d2e-baff06bf4876" />
+</Solution>
