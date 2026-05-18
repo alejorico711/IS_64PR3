@@ -4,12 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace ProyectoIS_64PR
 {
@@ -27,6 +31,7 @@ namespace ProyectoIS_64PR
             dgvUsuarios.ReadOnly = true;
             dgvUsuarios.MultiSelect = false;
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            btnGuardar.Enabled = false;
         }
 
         private void CargaData()
@@ -52,6 +57,7 @@ namespace ProyectoIS_64PR
             pnlContenedor.Controls.Clear();
             uc.Dock = DockStyle.Fill;
             pnlContenedor.Controls.Add(uc);
+            btnGuardar.Enabled = true;
         }
 
         private void btnGuardar_Click(object sender, EventArgs e)
@@ -65,39 +71,95 @@ namespace ProyectoIS_64PR
 
                     if(uc is ucCrearUsuario ucc) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
                     {
-                        Servicios_64PR.Usuario u = new Servicios_64PR.Usuario()
+                        if (!Regex.IsMatch(ucc.DNI(), @"^\d{7,8}$"))
                         {
-                            DNI = ucc.DNI(),
-                            Apellido = ucc.Apellido(),
-                            Nombre = ucc.Nombre(),
-                            Login = ucc.Nombre() + "." + ucc.Apellido(),
-                            Rol = ucc.Rol(),
-                            Email = ucc.Email(),
-                        };
-                        gusuarios.Crear(u);
-                        CargaData();
-                        ucc.LimpiarCampos();
-                        pnlContenedor.Controls.Clear();
-                        lblModo.Text = "consulta";
+                            MessageBox.Show("Ingrese un numero de DNI que tenga entre 7 y 8 digitos");
+                            return;
+                        }
+                        if (!Regex.IsMatch(ucc.Nombre(), @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$"))
+                        {
+                            MessageBox.Show("Ingrese un nombre valido");
+                            return;
+                        }
+                        if (!Regex.IsMatch(ucc.Apellido(), @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$"))
+                        {
+                            MessageBox.Show("Ingrese un apellido valido");
+                            return;
+                        }
+                        if (!Regex.IsMatch(ucc.Email(), @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"))
+                        {
+                            MessageBox.Show("Ingrese un email valido");
+                            return;
+                        }
+                        try
+                        {
+                            Servicios_64PR.Usuario u = new Servicios_64PR.Usuario()
+                            {
+                                DNI = ucc.DNI(),
+                                Apellido = ucc.Apellido(),
+                                Nombre = ucc.Nombre(),
+                                Login = ucc.Nombre() + "." + ucc.Apellido(),
+                                Rol = ucc.Rol(),
+                                Email = ucc.Email(),
+                            };
+                            gusuarios.Crear(u);
+                            CargaData();
+                            ucc.LimpiarCampos();
+                            pnlContenedor.Controls.Clear();
+                            uc = null;
+                            lblModo.Text = "consulta";
+                            btnGuardar.Enabled = false;
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 2627 || ex.Number == 2601)//cualquiera de los 2 numeros es para violacion de PK o UQ
+                            {
+                                if (ex.Message.Contains("PK__USUARIO"))
+                                {
+                                    MessageBox.Show("El DNI ya se encuentra registrado en el sistema.",
+                                                    "DNI duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                                else if (ex.Message.Contains("UQ__USUARIO"))
+                                {
+                                    MessageBox.Show("El email ingresado ya está registrado en el sistema.",
+                                                    "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                            }
+                        }
                     }
                     break;
                 case "modificar":
                     if (uc is ucModificarUsuario ucm) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
                     {
-                        Servicios_64PR.Usuario u = new Servicios_64PR.Usuario()
+                        if (!Regex.IsMatch(ucm.Email(), @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"))
                         {
-                            DNI = ucm.DNI(),
-                            Apellido = ucm.Apellido(),
-                            Nombre = ucm.Nombre(),
-                            Login = ucm.Login(),
-                            Rol = ucm.Rol(),
-                            Email = ucm.Email(),
-                        };
-                        gusuarios.Modificar(u);
-                        CargaData();
-                        ucm.LimpiarCampos();
-                        pnlContenedor.Controls.Clear();
-                        lblModo.Text = "consulta";
+                            MessageBox.Show("Ingrese un email valido");
+                            return;
+                        }
+                        try
+                        {
+                            Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
+                            u.Rol = ucm.Rol();
+                            u.Email = ucm.Email();
+                            gusuarios.Modificar(u);
+                            CargaData();
+                            ucm.LimpiarCampos();
+                            pnlContenedor.Controls.Clear();
+                            uc = null;
+                            lblModo.Text = "consulta";
+                            btnGuardar.Enabled = false;
+                        }
+                        catch (SqlException ex)
+                        {
+                            if (ex.Number == 2627 || ex.Number == 2601)//cualquiera de los 2 numeros es para violacion de PK o UQ
+                            {
+                                if (ex.Message.Contains("UQ__USUARIO"))
+                                {
+                                    MessageBox.Show("El email ingresado ya está registrado en el sistema.",
+                                                    "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                }
+                            }
+                        }
                     }
                     break;
             }
@@ -125,6 +187,7 @@ namespace ProyectoIS_64PR
             pnlContenedor.Controls.Clear();
             uc.Dock = DockStyle.Fill;
             pnlContenedor.Controls.Add(uc);
+            btnGuardar.Enabled = true;
         }
 
         private void dgvUsuarios_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -132,9 +195,9 @@ namespace ProyectoIS_64PR
             if (e.RowIndex >= 0)
             {
                 Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
-                if (uc is ucModificarUsuario ucc) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
+                if (uc is ucModificarUsuario ucm) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
                 {
-                    ucc.EscribirControles(u);
+                    ucm.EscribirControles(u);
                 }
             }
         }

@@ -48,7 +48,7 @@
             this.btnIniciarSesion.Location = new System.Drawing.Point(299, 227);
             this.btnIniciarSesion.Name = "btnIniciarSesion";
             this.btnIniciarSesion.Size = new System.Drawing.Size(98, 23);
-            this.btnIniciarSesion.TabIndex = 1;
+            this.btnIniciarSesion.TabIndex = 2;
             this.btnIniciarSesion.Text = "Iniciar sesion";
             this.btnIniciarSesion.UseVisualStyleBackColor = true;
             this.btnIniciarSesion.Click += new System.EventHandler(this.btnIniciarSesion_Click);
@@ -58,7 +58,7 @@
             this.txtContra.Location = new System.Drawing.Point(297, 188);
             this.txtContra.Name = "txtContra";
             this.txtContra.Size = new System.Drawing.Size(100, 22);
-            this.txtContra.TabIndex = 2;
+            this.txtContra.TabIndex = 1;
             // 
             // label1
             // 

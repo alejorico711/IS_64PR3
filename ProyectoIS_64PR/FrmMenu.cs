@@ -59,5 +59,16 @@ namespace ProyectoIS_64PR
                 this.Close();
             }
         }
+
+        private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmCambiarClave_64PR());
+        }
+
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SessionManager.GetInstance.Logout();
+            Application.Exit();
+        }
     }
 }

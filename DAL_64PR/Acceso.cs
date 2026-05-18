@@ -126,11 +126,10 @@ namespace DAL_64PR
                 ConfirmarTransaccion(tx);
                 return filasAfectadas;
             }
-            catch (Exception ex)
+            catch
             {
                 CancelarTransaccion(tx);
-                Console.WriteLine("error", ex.Message);
-                return 0;
+                throw;
             }
         }
 
@@ -152,6 +151,35 @@ namespace DAL_64PR
             adaptador.Fill(dt);
             desconectar();
             return dt;
+        }
+
+        public object leerEscalar(string query, SqlParameter[] parametro)
+        {
+            object resultado = null;
+            try
+            {
+                conectar();
+                comando.Connection = conexion;
+                comando.CommandType = System.Data.CommandType.Text;
+                comando.CommandText = query;
+
+                if (parametro != null)
+                {
+                    comando.Parameters.Clear();
+                    comando.Parameters.AddRange(parametro);
+                }
+                resultado = comando.ExecuteScalar();
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error al ejecutar ExecuteScalar: " + ex.Message);
+            }
+            finally
+            {
+                comando.Parameters.Clear();
+                desconectar();
+            }
+            return resultado;
         }
     }
 }

@@ -17,19 +17,38 @@ namespace ProyectoIS_64PR
         public FrmCambiarClave_64PR()
         {
             InitializeComponent();
+            txtContra.UseSystemPasswordChar = true;
+            txtConfirmar.UseSystemPasswordChar = true;
+            txtNueva.UseSystemPasswordChar = true;
         }
 
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
             try
             {
-                //agregar contra actual
-                BLL_64PR.Usuario.CambiarClave(txtNueva.Text.Trim(), txtConfirmar.Text.Trim());
+                BLL_64PR.Usuario gusuario = new BLL_64PR.Usuario();
+                byte[] hashalmacenado = gusuario.ObtenerHashAlmacenado(SessionManager.GetInstance.Usuario.Login);
+                if (Encriptación.Instancia.VerifyPassword(txtContra.Text.Trim(), hashalmacenado))
+                {
+                    if(txtContra.Text.Trim() == txtNueva.Text.Trim() && txtNueva.Text.Trim() == txtConfirmar.Text.Trim())
+                    {
+                        MessageBox.Show("No puede establacer como nueva clave su clave actual");
+                    }
+                    else
+                    {
+                        gusuario.CambiarClave(txtNueva.Text.Trim(), txtConfirmar.Text.Trim());
 
-                MessageBox.Show("Contraseña cambiada exitosamente.", "Exito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
-                this.Close();
+                        MessageBox.Show("Contraseña cambiada exitosamente.", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("La contraseña actual es incorrecta");
+                }
+                
             }
             catch (Exception ex)
             {

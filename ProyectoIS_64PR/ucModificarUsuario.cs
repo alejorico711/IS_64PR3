@@ -16,54 +16,30 @@ namespace ProyectoIS_64PR
         public ucModificarUsuario()
         {
             InitializeComponent();
+            cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbRol.SelectedIndex = 0;
         }
 
         public void EscribirControles(Servicios_64PR.Usuario u)
         {
-            txtDNI.Text = u.DNI;
-            txtNombre.Text = u.Nombre;
-            txtApellido.Text = u.Apellido;
-            txtLogin.Text = u.Login;
             cmbRol.Text = u.Rol;
             txtEmail.Text = u.Email;
-        }
-        public string DNI()
-        {
-            return txtDNI.Text;
-        }
-
-        public string Nombre()
-        {
-            return txtNombre.Text;
-        }
-
-        public string Apellido()
-        {
-            return txtApellido.Text;
         }
 
         public string Rol()
         {
-            return cmbRol.Text;
+            return cmbRol.Text.Trim();
         }
 
         public string Email()
         {
-            return txtEmail.Text;
+            return txtEmail.Text.Trim();
         }
 
-        public string Login()
-        {
-            return txtLogin.Text;
-        }
         public void LimpiarCampos()
         {
-            txtApellido.Text = string.Empty;
-            txtDNI.Text = string.Empty;
-            txtNombre.Text = string.Empty;
             cmbRol.SelectedIndex = -1;
             txtEmail.Text = string.Empty;
-            txtLogin.Text = string.Empty;
         }
 
 

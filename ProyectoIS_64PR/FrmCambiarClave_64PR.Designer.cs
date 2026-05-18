@@ -33,6 +33,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.btnConfirmar = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtContra = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtNueva
@@ -72,21 +74,40 @@
             this.btnConfirmar.Location = new System.Drawing.Point(394, 214);
             this.btnConfirmar.Name = "btnConfirmar";
             this.btnConfirmar.Size = new System.Drawing.Size(100, 23);
-            this.btnConfirmar.TabIndex = 6;
+            this.btnConfirmar.TabIndex = 3;
             this.btnConfirmar.Text = "Confirmar";
             this.btnConfirmar.UseVisualStyleBackColor = true;
             this.btnConfirmar.Click += new System.EventHandler(this.btnConfirmar_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(268, 115);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(118, 16);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Contraseña actual:";
+            // 
+            // txtContra
+            // 
+            this.txtContra.Location = new System.Drawing.Point(394, 112);
+            this.txtContra.Name = "txtContra";
+            this.txtContra.Size = new System.Drawing.Size(100, 22);
+            this.txtContra.TabIndex = 0;
             // 
             // FrmCambiarClave_64PR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtContra);
             this.Controls.Add(this.btnConfirmar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtConfirmar);
             this.Controls.Add(this.txtNueva);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmCambiarClave_64PR";
             this.Text = "FrmCambiarClave_64PR";
             this.ResumeLayout(false);
@@ -100,5 +121,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnConfirmar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtContra;
     }
 }

@@ -17,6 +17,8 @@ namespace ProyectoIS_64PR
         public FrmLogin_64PR()
         {
             InitializeComponent();
+            this.AcceptButton = btnIniciarSesion;
+            txtContra.UseSystemPasswordChar = true;
         }
 
         private void btnIniciarSesion_Click(object sender, EventArgs e)

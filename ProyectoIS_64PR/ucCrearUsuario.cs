@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ProyectoIS_64PR
 {
@@ -15,31 +16,33 @@ namespace ProyectoIS_64PR
         public ucCrearUsuario()
         {
             InitializeComponent();
+            cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbRol.SelectedIndex = 0;
         }
 
         public string DNI()
         {
-            return txtDNI.Text;
+            return txtDNI.Text.Trim();
         }
 
         public string Nombre()
         {
-            return txtNombre.Text;
+            return txtNombre.Text.Trim();
         }
 
         public string Apellido()
         {
-            return txtApellido.Text;
+            return txtApellido.Text.Trim();
         }
 
         public string Rol()
         {
-            return cmbRol.Text;
+            return cmbRol.Text.Trim();
         }
 
         public string Email()
         {
-            return txtEmail.Text;
+            return txtEmail.Text.Trim();
         }
         public void LimpiarCampos()
         {

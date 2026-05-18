@@ -36,24 +36,44 @@ namespace BLL_64PR
 
         public void Crear(Servicios_64PR.Usuario u)
         {
-            string query = "INSERT INTO USUARIO_64PR (DNI, Apellido, Nombre, Login, Rol, Email, Contraseña) VALUES (@DNI, @Apellido, @Nombre, @Login, @Rol, @Email, @Contraseña)";
-            SqlParameter[] parametros = new SqlParameter[7];
-            parametros[0] = new SqlParameter("@DNI", u.DNI);
-            parametros[1] = new SqlParameter("@Apellido", u.Apellido);
-            parametros[2] = new SqlParameter("@Nombre", u.Nombre);
-            parametros[3] = new SqlParameter("@Login", u.Login);
-            parametros[4] = new SqlParameter("@Rol", u.Rol);
-            parametros[5] = new SqlParameter("@Email", u.Email);
-            parametros[6] = new SqlParameter("@Contraseña", Encriptación.Instancia.Encriptar(u.Apellido + u.DNI));
-            int fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
+            try
+            {
+                int fa;
+                string query = "SELECT COUNT(*) AS total FROM USUARIO_64PR WHERE Login LIKE @Login";
+                SqlParameter[] parametros2 = new SqlParameter[1];
+                parametros2[0] = new SqlParameter("@Login", u.Login + "%");
+                fa = Convert.ToInt32(DAL_64PR.Acceso.Instancia.leerEscalar(query, parametros2));
+
+                query = "INSERT INTO USUARIO_64PR (DNI, Apellido, Nombre, Login, Rol, Email, Contraseña) VALUES (@DNI, @Apellido, @Nombre, @Login, @Rol, @Email, @Contraseña)";
+                SqlParameter[] parametros = new SqlParameter[7];
+                parametros[0] = new SqlParameter("@DNI", u.DNI);
+                parametros[1] = new SqlParameter("@Apellido", u.Apellido);
+                parametros[2] = new SqlParameter("@Nombre", u.Nombre);
+                if (fa == 0)
+                {
+                    parametros[3] = new SqlParameter("@Login", u.Login);
+                }
+                else
+                {
+                    parametros[3] = new SqlParameter("@Login", (u.Login + (fa + 1).ToString())); //el +1 es necesario para que la primera vez que ocurra la repeticion no use el numero 1
+                }
+                parametros[4] = new SqlParameter("@Rol", u.Rol);
+                parametros[5] = new SqlParameter("@Email", Encriptación.Instancia.EncriptarAESBase64(u.Email));
+                parametros[6] = new SqlParameter("@Contraseña", Encriptación.Instancia.Encriptar(u.Apellido + u.DNI));
+                fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public void Desbloquear(Servicios_64PR.Usuario u)
         {
-            //reestablecer clave y poner primera vez en true
-            string query = "UPDATE USUARIO_64PR SET Bloqueo = 0, Intentos = 0 WHERE DNI = @DNI";
-            SqlParameter[] parametros = new SqlParameter[1];
+            string query = "UPDATE USUARIO_64PR SET Bloqueo = 0, Intentos = 0, PrimeraVez = 1, Contraseña = @Contraseña WHERE DNI = @DNI";
+            SqlParameter[] parametros = new SqlParameter[2];
             parametros[0] = new SqlParameter("@DNI", u.DNI);
+            parametros[1] = new SqlParameter("@Contraseña", Encriptación.Instancia.Encriptar(u.Apellido + u.DNI));
             int fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
         }
 
@@ -72,9 +92,10 @@ namespace BLL_64PR
                 u.Apellido = dr["Apellido"].ToString();
                 u.Login = dr["Login"].ToString();
                 u.Rol = dr["Rol"].ToString();
-                u.Email = dr["Email"].ToString();
+                u.Email = Encriptación.Instancia.DesencriptarAESBase64(dr["Email"].ToString());
                 u.Activo = bool.Parse(dr["Activo"].ToString());
                 u.Bloqueado = bool.Parse(dr["Bloqueo"].ToString());
+                u.PrimeraVez = bool.Parse(dr["PrimeraVez"].ToString());
                 lista.Add(u);
             }
             return lista;
@@ -82,16 +103,19 @@ namespace BLL_64PR
 
         public void Modificar(Servicios_64PR.Usuario u)
         {
-            //solo se puede modificar rol y email
-            string query = "UPDATE USUARIO_64PR SET Apellido = @Apellido, Nombre = @Nombre, Login = @Login, Rol = @Rol, Email = @Email WHERE DNI = @DNI";
-            SqlParameter[] parametros = new SqlParameter[6];
-            parametros[0] = new SqlParameter("@DNI", u.DNI);
-            parametros[1] = new SqlParameter("@Apellido", u.Apellido);
-            parametros[2] = new SqlParameter("@Nombre", u.Nombre);
-            parametros[3] = new SqlParameter("@Login", u.Login);
-            parametros[4] = new SqlParameter("@Rol", u.Rol);
-            parametros[5] = new SqlParameter("@Email", u.Email);
-            int fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
+            try
+            {
+                string query = "UPDATE USUARIO_64PR SET Rol = @Rol, Email = @Email WHERE DNI = @DNI";
+                SqlParameter[] parametros = new SqlParameter[3];
+                parametros[0] = new SqlParameter("@DNI", u.DNI);
+                parametros[1] = new SqlParameter("@Rol", u.Rol);
+                parametros[2] = new SqlParameter("@Email", Encriptación.Instancia.EncriptarAESBase64(u.Email));
+                int fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public bool VerificarClave(string login, string contra)
@@ -164,14 +188,14 @@ namespace BLL_64PR
             }
             return u;
         }
-        public static void CambiarClave(string nueva, string confirmacion)
+        public void CambiarClave(string nueva, string confirmacion)
         {
             if (string.IsNullOrWhiteSpace(nueva))
                 throw new Exception("La nueva contraseña no puede estar vacia.");
             if (nueva != confirmacion)
                 throw new Exception("La nueva contraseña y la confirmacion no coinciden.");
-            if (nueva.Length < 6)
-                throw new Exception("La nueva contrasenia debe tener al menos 6 caracteres.");
+            if (nueva.Length < 8)
+                throw new Exception("La nueva contrasenia debe tener al menos 8 caracteres.");
 
             string query = "UPDATE USUARIO_64PR SET Contraseña = @Contraseña, PrimeraVez = 0 WHERE DNI = @DNI";
             SqlParameter[] parametros = new SqlParameter[2];
