@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmBitacora_64PR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBitacora_64PR.Designer.cs">
+      <DependentUpon>FrmBitacora_64PR.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmCambiarClave_64PR.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
     <Compile Include="ucModificarUsuario.Designer.cs">
       <DependentUpon>ucModificarUsuario.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FrmBitacora_64PR.resx">
+      <DependentUpon>FrmBitacora_64PR.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmCambiarClave_64PR.resx">
       <DependentUpon>FrmCambiarClave_64PR.cs</DependentUpon>
     </EmbeddedResource>

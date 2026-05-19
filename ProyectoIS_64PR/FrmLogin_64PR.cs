@@ -52,6 +52,9 @@ namespace ProyectoIS_64PR
                 gusuarios.ReiniciarIntentos(txtLogin.Text.Trim());
                 Servicios_64PR.Usuario u = gusuarios.ObtenerUsuario(txtLogin.Text.Trim());
                 SessionManager.GetInstance.Login(u);
+                BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1","1",5);
+                bita2.RegistrarEvento(ev2);
                 if (SessionManager.GetInstance.Usuario.PrimeraVez)
                 {
                     MessageBox.Show(
@@ -64,6 +67,9 @@ namespace ProyectoIS_64PR
                         if (fcc.ShowDialog() != DialogResult.OK)
                         {
                             SessionManager.GetInstance.Logout();
+                            BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
+                            Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
+                            bita3.RegistrarEvento(ev3);
                             return;
                         }
                     }
@@ -75,7 +81,16 @@ namespace ProyectoIS_64PR
             }
 
             gusuarios.SumarIntento(txtLogin.Text.Trim());
-            lblMensaje.Text = "Intento " + gusuarios.ObtenerIntentos(txtLogin.Text.Trim())+"/3";
+            BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+            Servicios_64PR.Evento_64PR ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "3", 4);
+            bita.RegistrarEvento(ev);
+            string temp = gusuarios.ObtenerIntentos(txtLogin.Text.Trim());
+            lblMensaje.Text = "Intento " + temp +"/3";
+            if(Convert.ToInt16(temp) == 3)
+            {
+                ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "4", 3);
+                bita.RegistrarEvento(ev);
+            }
             MessageBox.Show("Contraseña incorrecta");
         }
     }

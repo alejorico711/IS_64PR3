@@ -53,6 +53,9 @@ namespace ProyectoIS_64PR
 
             if (resultado == DialogResult.Yes)
             {
+                BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
+                bita3.RegistrarEvento(ev3);
                 SessionManager.GetInstance.Logout();
                 var fLogin = new FrmLogin_64PR();
                 fLogin.Show();
@@ -67,8 +70,21 @@ namespace ProyectoIS_64PR
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
+            Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
+            bita3.RegistrarEvento(ev3);
             SessionManager.GetInstance.Logout();
             Application.Exit();
+        }
+
+        private void eventosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmBitacora_64PR());
+        }
+
+        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmLogin_64PR());
         }
     }
 }

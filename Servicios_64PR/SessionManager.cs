@@ -48,6 +48,7 @@ namespace Servicios_64PR
             }
 
             _instancia._usuario = null;
+
         }
     }
 }

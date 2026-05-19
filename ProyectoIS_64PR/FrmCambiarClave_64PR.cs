@@ -37,7 +37,9 @@ namespace ProyectoIS_64PR
                     else
                     {
                         gusuario.CambiarClave(txtNueva.Text.Trim(), txtConfirmar.Text.Trim());
-
+                        BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                        Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "2", 4);
+                        bita.RegistrarEvento(ev);
                         MessageBox.Show("Contraseña cambiada exitosamente.", "Exito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;

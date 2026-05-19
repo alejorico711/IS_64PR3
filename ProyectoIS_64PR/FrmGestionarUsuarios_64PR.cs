@@ -17,8 +17,12 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace ProyectoIS_64PR
 {
+
     public partial class FrmGestionarUsuarios_64PR : Form
     {
+        BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+        Servicios_64PR.Evento_64PR ev;
+
         BLL_64PR.Usuario gusuarios = new BLL_64PR.Usuario();
         string modo = "consulta";
         UserControl uc;
@@ -103,6 +107,8 @@ namespace ProyectoIS_64PR
                                 Email = ucc.Email(),
                             };
                             gusuarios.Crear(u);
+                            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "6", 4);
+                            bita.RegistrarEvento(ev);
                             CargaData();
                             ucc.LimpiarCampos();
                             pnlContenedor.Controls.Clear();
@@ -142,6 +148,8 @@ namespace ProyectoIS_64PR
                             u.Rol = ucm.Rol();
                             u.Email = ucm.Email();
                             gusuarios.Modificar(u);
+                            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "7", 4);
+                            bita.RegistrarEvento(ev);
                             CargaData();
                             ucm.LimpiarCampos();
                             pnlContenedor.Controls.Clear();
@@ -168,13 +176,27 @@ namespace ProyectoIS_64PR
         private void btnDesbloquear_Click(object sender, EventArgs e)
         {
             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
-            gusuarios.Desbloquear(u);
-            CargaData();
+            if (u.Bloqueado == true)
+            {
+                gusuarios.Desbloquear(u);
+                ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8", 4);
+                bita.RegistrarEvento(ev);
+                CargaData();
+            }
+            else
+            {
+                MessageBox.Show("El usuario no se encuentra bloqueado");
+            }
         }
 
         private void btnActDesact_Click(object sender, EventArgs e)
         {
             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
+            if (u.Login == SessionManager.GetInstance.Usuario.Login)
+            {
+                MessageBox.Show("No se puede desactivar al usuario en sesion");
+                return;
+            }
             gusuarios.Actdesact(u);
             CargaData();
         }
