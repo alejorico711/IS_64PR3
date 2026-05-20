@@ -120,7 +120,11 @@ namespace DAL_64PR
                 comando.CommandText = query;
                 if (parametro != null)
                 {
-                    comando.Parameters.AddRange(parametro);
+                    foreach (SqlParameter param in parametro)
+                    {
+                        comando.Parameters.AddWithValue(param.ParameterName, param.Value);
+                    }
+                    //comando.Parameters.AddRange(parametro);   (asi lo haciamos antes, que funciona igual, solo que los mandaba todos de una)
                 }
                 filasAfectadas = comando.ExecuteNonQuery();
                 ConfirmarTransaccion(tx);
@@ -145,7 +149,11 @@ namespace DAL_64PR
 
             if (parametro != null)
             {
-                comando.Parameters.AddRange(parametro);
+                foreach (SqlParameter param in parametro)
+                {
+                    comando.Parameters.AddWithValue(param.ParameterName, param.Value);
+                }
+                //comando.Parameters.AddRange(parametro);
             }
             adaptador.SelectCommand = comando;
             adaptador.Fill(dt);
@@ -166,7 +174,11 @@ namespace DAL_64PR
                 if (parametro != null)
                 {
                     comando.Parameters.Clear();
-                    comando.Parameters.AddRange(parametro);
+                    foreach (SqlParameter param in parametro)
+                    {
+                        comando.Parameters.AddWithValue(param.ParameterName, param.Value);
+                    }
+                    //comando.Parameters.AddRange(parametro);
                 }
                 resultado = comando.ExecuteScalar();
             }

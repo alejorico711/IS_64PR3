@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Servicios_64PR
 {
@@ -48,7 +49,6 @@ namespace Servicios_64PR
             }
 
             _instancia._usuario = null;
-
         }
     }
 }

@@ -43,7 +43,17 @@ namespace ProyectoIS_64PR
                         MessageBox.Show("Contraseña cambiada exitosamente.", "Exito",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;
-                        this.Close();
+                        SessionManager.GetInstance.Logout();
+                        FrmLogin_64PR f = new FrmLogin_64PR();
+                        f.Show();
+                        var formulariosAVaciar = Application.OpenForms.Cast<Form>().ToList();
+                        foreach (Form fo in formulariosAVaciar)
+                        {
+                            if (fo != f)
+                            {
+                                fo.Close();
+                            }
+                        }
                     }
                 }
                 else

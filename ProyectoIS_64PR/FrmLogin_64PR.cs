@@ -67,31 +67,33 @@ namespace ProyectoIS_64PR
                         if (fcc.ShowDialog() != DialogResult.OK)
                         {
                             SessionManager.GetInstance.Logout();
-                            BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
-                            Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
-                            bita3.RegistrarEvento(ev3);
                             return;
                         }
                     }
                 }
-                FrmMenu f = new FrmMenu();
-                f.Show();
-                this.Hide();
-                return;
+                else
+                {
+                    FrmMenu f = new FrmMenu();
+                    f.Show();
+                    this.Close();
+                    return;
+                }
             }
-
-            gusuarios.SumarIntento(txtLogin.Text.Trim());
-            BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
-            Servicios_64PR.Evento_64PR ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "3", 4);
-            bita.RegistrarEvento(ev);
-            string temp = gusuarios.ObtenerIntentos(txtLogin.Text.Trim());
-            lblMensaje.Text = "Intento " + temp +"/3";
-            if(Convert.ToInt16(temp) == 3)
+            else
             {
-                ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "4", 3);
+                gusuarios.SumarIntento(txtLogin.Text.Trim());
+                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "3", 4);
                 bita.RegistrarEvento(ev);
+                string temp = gusuarios.ObtenerIntentos(txtLogin.Text.Trim());
+                lblMensaje.Text = "Intento " + temp + "/3";
+                if (Convert.ToInt16(temp) == 3)
+                {
+                    ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "4", 3);
+                    bita.RegistrarEvento(ev);
+                }
+                MessageBox.Show("Contraseña incorrecta");
             }
-            MessageBox.Show("Contraseña incorrecta");
         }
     }
 }
