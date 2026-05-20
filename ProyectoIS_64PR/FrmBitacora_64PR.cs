@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -187,7 +188,75 @@ namespace ProyectoIS_64PR
 
         private void btnImprimir_Click(object sender, EventArgs e)
         {
+            if (dgvEventos.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para imprimir.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            PrintDocument printDoc = new PrintDocument();
+            printDoc.DefaultPageSettings.Landscape = true; // o Portrait si entra bien
+            printDoc.PrintPage += PrintDoc_PrintPage;
+
+            PrintPreviewDialog preview = new PrintPreviewDialog();
+            preview.Document = printDoc;
+            preview.WindowState = FormWindowState.Maximized;
+            preview.ShowDialog();
+        }
+        private void PrintDoc_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Font fontHeader = new Font("Arial", 10, FontStyle.Bold);
+            Font fontData = new Font("Arial", 9, FontStyle.Regular);
+            Brush brush = Brushes.Black;
+
+            float x = e.MarginBounds.Left;
+            float y = e.MarginBounds.Top;
+            float rowH = fontData.GetHeight(g) + 4;
+
+            // Calcular ancho de cada columna proporcional al espacio disponible
+            int visibleCols = dgvEventos.Columns.Cast<DataGridViewColumn>()
+                                  .Count(c => c.Visible);
+            float colW = e.MarginBounds.Width / (float)visibleCols;
+
+            // Encabezados
+            foreach (DataGridViewColumn col in dgvEventos.Columns)
+            {
+                if (!col.Visible) continue;
+                g.DrawString(col.HeaderText, fontHeader, brush, x, y);
+                x += colW;
+            }
+
+            y += rowH;
+
+            // Línea separadora
+            g.DrawLine(Pens.Black, e.MarginBounds.Left, y, e.MarginBounds.Right, y);
+            y += 4;
+
+            // Filas
+            foreach (DataGridViewRow row in dgvEventos.Rows)
+            {
+                if (row.IsNewRow) continue;
+                x = e.MarginBounds.Left;
+
+                foreach (DataGridViewColumn col in dgvEventos.Columns)
+                {
+                    if (!col.Visible) continue;
+                    string cellVal = row.Cells[col.Index].Value?.ToString() ?? "";
+                    g.DrawString(cellVal, fontData, brush, x, y);
+                    x += colW;
+                }
+
+                y += rowH;
+
+                // Si se va de página (para implementación básica, corta ahí)
+                if (y > e.MarginBounds.Bottom)
+                    break;
+            }
+
+            fontHeader.Dispose();
+            fontData.Dispose();
         }
     }
 }
