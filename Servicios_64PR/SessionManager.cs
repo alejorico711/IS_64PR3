@@ -43,6 +43,7 @@ namespace Servicios_64PR
 
         public void Logout()
         {
+            
             if (_instancia == null || _instancia._usuario == null)
             {
                 throw new Exception("Sesión no iniciada");

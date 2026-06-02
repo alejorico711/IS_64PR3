@@ -34,6 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblMensaje = new System.Windows.Forms.Label();
+            this.cmbIdioma = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtLogin
@@ -86,11 +87,21 @@
             this.lblMensaje.Size = new System.Drawing.Size(0, 16);
             this.lblMensaje.TabIndex = 5;
             // 
+            // cmbIdioma
+            // 
+            this.cmbIdioma.FormattingEnabled = true;
+            this.cmbIdioma.Location = new System.Drawing.Point(541, 331);
+            this.cmbIdioma.Name = "cmbIdioma";
+            this.cmbIdioma.Size = new System.Drawing.Size(121, 24);
+            this.cmbIdioma.TabIndex = 6;
+            this.cmbIdioma.SelectedIndexChanged += new System.EventHandler(this.cmbIdioma_SelectedIndexChanged_1);
+            // 
             // FrmLogin_64PR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cmbIdioma);
             this.Controls.Add(this.lblMensaje);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -112,5 +123,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblMensaje;
+        private System.Windows.Forms.ComboBox cmbIdioma;
     }
 }

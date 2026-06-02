@@ -8,6 +8,7 @@ namespace Servicios_64PR
 {
     public class Usuario
     {
+
         private string _dni;
 
         public string DNI
@@ -78,6 +79,5 @@ namespace Servicios_64PR
             get { return _primeravez; }
             set { _primeravez = value; }
         }
-
     }
 }

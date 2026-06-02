@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace DAL_64PR
 {
+    /*
+    Esto fue sacado de un proyecto desarrollado en desarrollo y arquitectura
+    de software, junto a jeremias gomez (comision de los miercoles a la mañana)
+    */
     public class Acceso
     {
         private static Acceso _instancia;

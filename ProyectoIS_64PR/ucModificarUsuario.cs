@@ -20,6 +20,12 @@ namespace ProyectoIS_64PR
             cmbRol.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Practicamente esta clase contiene todos metodos para poder
+        /// volcar los valores en los controles y para poder
+        /// acceder a los valores de los controles del diseñador, ya que,
+        /// no se lo puede acceder de otra forma
+        /// </summary>
         public void EscribirControles(Servicios_64PR.Usuario u)
         {
             cmbRol.Text = u.Rol;

@@ -211,5 +211,26 @@ namespace DAL_64PR
             DataTable tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
             return Convert.ToInt16(tabla.Rows[0][0]).ToString();
         }
+        public string ObtenerIdioma(string login)
+        {
+            string query = "SELECT Idioma FROM USUARIO_64PR WHERE Login = @Login";
+            SqlParameter[] parametros = new SqlParameter[1];
+            parametros[0] = new SqlParameter("@Login", login);
+            DataTable tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            if (tabla != null && tabla.Rows.Count > 0)
+                return tabla.Rows[0]["Idioma"].ToString();
+
+            return "es"; // valor por defecto si no hay dato
+        }
+
+        public void GuardarIdioma(string login, string idioma)
+        {
+            string query = "UPDATE USUARIO_64PR SET Idioma = @Idioma WHERE Login = @Login";
+            SqlParameter[] parametros = new SqlParameter[2];
+            parametros[0] = new SqlParameter("@Login", login);
+            parametros[1] = new SqlParameter("@Idioma", idioma);
+            DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
+        }
     }
 }

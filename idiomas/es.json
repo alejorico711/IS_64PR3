@@ -1,0 +1,43 @@
+{
+  "frmLogin_titulo":              "Iniciar sesión",
+  "frmLogin_lblUsuario":         "Nombre de usuario",
+  "frmLogin_lblContrasena":      "Contraseña",
+  "frmLogin_btnIniciar":         "Iniciar sesión",
+  "frmLogin_lblMensaje":         "",
+
+  "frmMenu_titulo":              "Menú principal",
+  "frmMenu_login":               "Login",
+  "frmMenu_gestionUsuarios":     "Gestionar usuarios",
+  "frmMenu_cambiarContrasena":   "Cambiar contraseña",
+  "frmMenu_eventos":             "Eventos",
+  "frmMenu_cerrarSesion":        "Cerrar sesión",
+  "frmMenu_salir":               "Salir",
+
+  "frmCambiarClave_titulo":      "Cambiar contraseña",
+  "frmCambiarClave_lblActual":   "Contraseña actual:",
+  "frmCambiarClave_lblNueva":    "Nueva contraseña:",
+  "frmCambiarClave_lblConfirmar":"Confirmar contraseña:",
+  "frmCambiarClave_btnConfirmar":"Confirmar",
+
+  "frmGestionUsuarios_titulo":   "Gestionar usuarios",
+  "frmGestionUsuarios_btnCrear": "Crear",
+  "frmGestionUsuarios_btnDesbloquear": "Desbloquear",
+  "frmGestionUsuarios_btnModificar":   "Modificar",
+  "frmGestionUsuarios_btnActDesact":   "Act./Desact.",
+  "frmGestionUsuarios_btnGuardar":     "Guardar",
+  "frmGestionUsuarios_lblModo":        "Modo",
+  "frmGestionUsuarios_rbActivos":      "Activos",
+  "frmGestionUsuarios_rbNoActivos":    "No activos",
+  "frmGestionUsuarios_rbTodos":        "Todos",
+  "frmGestionUsuarios_lblCantidad":    "Cantidad de usuarios:",
+
+  "msg_sesionYaIniciada":        "Ya hay una sesión activa.",
+  "msg_usuarioNoEncontrado":     "Usuario no encontrado.",
+  "msg_bloqueadoInactivo":       "El usuario se encuentra bloqueado o inactivo.",
+  "msg_contrasenaTemporal":      "Su contraseña es temporal. Debe cambiarla antes de continuar.",
+  "msg_contrasenaTemporal_titulo":"Cambio de Contraseña Requerido",
+  "msg_contrasenaIncorrecta":    "Contraseña incorrecta.",
+  "msg_camposVacios":            "Completá todos los campos.",
+  "msg_cerrarSesion":            "¿Está seguro de que desea cerrar la sesión?",
+  "msg_cerrarSesion_titulo":     "Cerrar Sesión"
+}

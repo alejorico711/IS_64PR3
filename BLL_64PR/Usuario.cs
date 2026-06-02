@@ -82,5 +82,14 @@ namespace BLL_64PR
         {
             return mpp.ObtenerIntentos(login);
         }
+        public string ObtenerIdioma(string login)
+        {
+            return mpp.ObtenerIdioma(login);
+        }
+
+        public void GuardarIdioma(string login, string idioma)
+        {
+            mpp.GuardarIdioma(login, idioma);
+        }
     }
 }

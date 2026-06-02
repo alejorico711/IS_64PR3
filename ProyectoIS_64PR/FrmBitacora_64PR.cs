@@ -12,20 +12,21 @@ using System.Windows.Forms;
 
 namespace ProyectoIS_64PR
 {
-    public partial class FrmBitacora_64PR : Form
+    public partial class FrmBitacora_64PR : Form, IObservadorIdioma_64PR
     {
         Bitacora_64PR bita = new Bitacora_64PR();
         List<Evento_64PR> lst = new List<Evento_64PR>();
+        Dictionary<string, string> textos;
         public FrmBitacora_64PR()
         {
             InitializeComponent();
 
-            cmbCriticidad.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCriticidad.DropDownStyle = ComboBoxStyle.DropDownList;  //esto es para que no se pueda escribir en los cmb
             cmbLogins.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbModulos.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbTipos.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            cmbLogins.DataSource = bita.ListarLogins().OrderBy(x => x).ToList();
+            cmbLogins.DataSource = bita.ListarLogins().OrderBy(x => x).ToList(); //los cargo y ordeno por orden alfabetico
             cmbModulos.DataSource = bita.ListarModulos().OrderBy(x => x).ToList();
             cmbTipos.DataSource = bita.ListarTipos().OrderBy(x => x).ToList();
 
@@ -36,6 +37,13 @@ namespace ProyectoIS_64PR
             dgvEventos.MultiSelect = false;
             lst = bita.ListarEventos();
             dgvEventos.DataSource = lst;
+
+            GestorIdioma_64PR.GetInstance.Suscribir(this); ///observer del cambio de idioma
+
+            ///Aplico el idioma que ya está cargado
+            textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
+            if (textos.Count > 0)
+                ActualizarIdioma(textos);
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
@@ -49,6 +57,7 @@ namespace ProyectoIS_64PR
             cmbLogins.SelectedIndex = -1;
             cmbModulos.SelectedIndex = -1;
             cmbTipos.SelectedIndex = -1;
+
             dgvEventos.DataSource = null;
             dgvEventos.DataSource = lst;
 
@@ -102,6 +111,7 @@ namespace ProyectoIS_64PR
             if (cbFin.Checked)
                 resultado = resultado.Where(e => e.FechaHora.Date <= dtpFin.Value.Date);
 
+            ///Voy aplicando filtros y sumando
             dgvEventos.DataSource = resultado.ToList();
         }
 
@@ -188,6 +198,22 @@ namespace ProyectoIS_64PR
         private void btnImprimir_Click(object sender, EventArgs e)
         {
 
+        }
+
+        public void ActualizarIdioma(Dictionary<string, string> textoss)
+        {
+            textos = textoss;
+            label1.Text = textos["lbl_BitacoraEventos"];
+            label2.Text = textos["lbl_Login"];
+            label3.Text = textos["lbl_FechaInicio"];
+            label4.Text = textos["lbl_FechaFin"];
+            label5.Text = textos["lbl_Modulo"];
+            label6.Text = textos["lbl_Evento"];
+            label7.Text = textos["lbl_Criticidad"];
+
+            btnLimpiar.Text = textos["btn_Limpiar"];
+            btnAplicar.Text = textos["btn_Aplicar"];
+            btnImprimir.Text = textos["btn_Imprimir"];
         }
     }
 }

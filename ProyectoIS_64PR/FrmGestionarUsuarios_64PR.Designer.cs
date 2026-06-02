@@ -35,7 +35,6 @@
             this.btnActDesact = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.pnlContenedor = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblModo = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -122,22 +121,14 @@
             this.pnlContenedor.Size = new System.Drawing.Size(320, 191);
             this.pnlContenedor.TabIndex = 6;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(365, 255);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 16);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Modo";
-            // 
             // lblModo
             // 
             this.lblModo.AutoSize = true;
-            this.lblModo.Location = new System.Drawing.Point(405, 255);
+            this.lblModo.Location = new System.Drawing.Point(365, 255);
             this.lblModo.Name = "lblModo";
-            this.lblModo.Size = new System.Drawing.Size(0, 16);
-            this.lblModo.TabIndex = 8;
+            this.lblModo.Size = new System.Drawing.Size(42, 16);
+            this.lblModo.TabIndex = 7;
+            this.lblModo.Text = "Modo";
             // 
             // radioButton1
             // 
@@ -197,7 +188,6 @@
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.lblModo);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.pnlContenedor);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.btnActDesact);
@@ -225,7 +215,6 @@
         private System.Windows.Forms.Button btnActDesact;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Panel pnlContenedor;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblModo;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;

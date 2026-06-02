@@ -20,11 +20,14 @@ namespace ProyectoIS_64PR
             FrmLogin_64PR formInicio = new FrmLogin_64PR();
             formInicio.Show();
 
-            Application.Run();  
-            //se cambio el Application.Run(New FrmLogin_64PR) a Application.Run() simplemente
-            //ya que necesitabamos cerrar todos los formularios y volver a abrir el de login sin que el programa
-            //se detuviera al momento de cambiar la contraseña, ya que se deben cerrar todos los formularios abiertos,
-            //cerrar la sesion y abrir un nuevo formulario de login
+            Application.Run();
+
+            ///<summary>
+            ///se cambio el Application.Run(New FrmLogin_64PR) a Application.Run() simplemente
+            ///ya que necesitabamos cerrar todos los formularios y volver a abrir el de login sin que el programa
+            ///se detuviera al momento de cambiar la contraseña, ya que se deben cerrar todos los formularios abiertos,
+            ///cerrar la sesion y abrir un nuevo formulario de login
+            /// </summary>
         }
     }
 }

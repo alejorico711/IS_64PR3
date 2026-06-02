@@ -120,6 +120,12 @@
     <EmbeddedResource Include="ucModificarUsuario.resx">
       <DependentUpon>ucModificarUsuario.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="idiomas\en.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="idiomas\es.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

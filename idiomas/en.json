@@ -1,0 +1,43 @@
+{
+  "frmLogin_titulo":              "Login",
+  "frmLogin_lblUsuario":         "Username",
+  "frmLogin_lblContrasena":      "Password",
+  "frmLogin_btnIniciar":         "Sign in",
+  "frmLogin_lblMensaje":         "",
+
+  "frmMenu_titulo":              "Main Menu",
+  "frmMenu_login":               "Login",
+  "frmMenu_gestionUsuarios":     "Manage users",
+  "frmMenu_cambiarContrasena":   "Change password",
+  "frmMenu_eventos":             "Events",
+  "frmMenu_cerrarSesion":        "Log out",
+  "frmMenu_salir":               "Exit",
+
+  "frmCambiarClave_titulo":      "Change password",
+  "frmCambiarClave_lblActual":   "Current password:",
+  "frmCambiarClave_lblNueva":    "New password:",
+  "frmCambiarClave_lblConfirmar":"Confirm password:",
+  "frmCambiarClave_btnConfirmar":"Confirm",
+
+  "frmGestionUsuarios_titulo":   "Manage users",
+  "frmGestionUsuarios_btnCrear": "Create",
+  "frmGestionUsuarios_btnDesbloquear": "Unlock",
+  "frmGestionUsuarios_btnModificar":   "Edit",
+  "frmGestionUsuarios_btnActDesact":   "Enable/Disable",
+  "frmGestionUsuarios_btnGuardar":     "Save",
+  "frmGestionUsuarios_lblModo":        "Mode",
+  "frmGestionUsuarios_rbActivos":      "Active",
+  "frmGestionUsuarios_rbNoActivos":    "Inactive",
+  "frmGestionUsuarios_rbTodos":        "All",
+  "frmGestionUsuarios_lblCantidad":    "User count:",
+
+  "msg_sesionYaIniciada":        "A session is already active.",
+  "msg_usuarioNoEncontrado":     "User not found.",
+  "msg_bloqueadoInactivo":       "The user is blocked or inactive.",
+  "msg_contrasenaTemporal":      "Your password is temporary. You must change it before continuing.",
+  "msg_contrasenaTemporal_titulo":"Password Change Required",
+  "msg_contrasenaIncorrecta":    "Incorrect password.",
+  "msg_camposVacios":            "Please fill in all fields.",
+  "msg_cerrarSesion":            "Are you sure you want to log out?",
+  "msg_cerrarSesion_titulo":     "Log Out"
+}

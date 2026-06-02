@@ -11,8 +11,7 @@ namespace Servicios_64PR
     public class Encriptación
     {
         /*
-        Cuando veamos encriptacion tenemos que preguntar si esto esta bien,
-        Esto fue sacado de un proyecto desarrollado en desarrollo y arquitectura
+        Este encriptador fue sacado de un proyecto desarrollado en desarrollo y arquitectura
         de software, junto a jeremias gomez (comision de los miercoles a la mañana)
         */
         private static Encriptación _instancia = null;
@@ -28,13 +27,20 @@ namespace Servicios_64PR
             }
         }
 
-        // Config de Hash
-        private const int SaltSize = 16;         // 16 bytes de Salt
-        private const int HashSize = 32;         // 32 de Hash
-        private const int Iterations = 10000;    // iteraciones para ralentizar el proceso de hash y darle seguridad, aguanta masivos ataques
+        /// <summary>
+        /// ENCRIPTACION IRREVERSIBLE
+        /// Configuracion del Hash:
+        /// 16 bytes de salt
+        /// 32 de hash
+        /// iteraciones para ralentizar el proceo del hash y darle seguridad
+        /// </summary>
+        private const int SaltSize = 16;         
+        private const int HashSize = 32;        
+        private const int Iterations = 10000;   
 
         public byte[] Encriptar(string password)
         {
+            ///Esta funcion me encripta generando el salt y el hash para concatenarlos al final
             byte[] salt;
             using (var rng = new RNGCryptoServiceProvider())
             {
@@ -58,26 +64,26 @@ namespace Servicios_64PR
         public bool VerifyPassword(string password, byte[] storedHashBytes)
         {
 
-            if (storedHashBytes.Length != SaltSize + HashSize) // Verificar el tamaño 
+            if (storedHashBytes.Length != SaltSize + HashSize) ///Verificar el tamaño 
                 return false;
 
 
-            byte[] salt = new byte[SaltSize];   // saco el Salt
+            byte[] salt = new byte[SaltSize];   ///Saco el Salt
             Array.Copy(storedHashBytes, 0, salt, 0, SaltSize);
 
 
-            byte[] newHash;  //  creo un nuevo Hash con la contra y el Salt 
+            byte[] newHash;  ///Creo un nuevo Hash con la contra y el Salt 
             using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
             {
                 newHash = pbkdf2.GetBytes(HashSize);
             }
 
 
-            byte[] storedPasswordHash = new byte[HashSize]; // traigo el Hash original guardado
+            byte[] storedPasswordHash = new byte[HashSize]; ///Traigo el Hash original guardado
             Array.Copy(storedHashBytes, SaltSize, storedPasswordHash, 0, HashSize);
 
 
-            return SlowEquals(storedPasswordHash, newHash); // Comparo los dos hashes byte por byte 
+            return SlowEquals(storedPasswordHash, newHash); ///Comparo los dos hashes byte por byte 
         }
         private bool SlowEquals(byte[] a, byte[] b)
         {
@@ -87,16 +93,21 @@ namespace Servicios_64PR
             return diff == 0;
         }
 
-        //reversible
-        private const int AesKeySize = 32;   // 256 bits → clave
-        private const int AesIvSize = 16;   // 128 bits → IV (tamaño de bloque fijo en AES)
-        private static readonly byte[] MasterKey = Encoding.UTF8.GetBytes("Proyecto64PR_ClaveSecreta2026!!!"); // exactamente 32 chars
+        /// <summary>
+        /// ENCRIPTACION REVERSIBLE
+        /// 256 bits → clave
+        /// 128 bits → IV (tamaño de bloque fijo en AES)
+        /// Key con exactamente 32 chars
+        /// </summary>
+        private const int AesKeySize = 32; 
+        private const int AesIvSize = 16;
+        private static readonly byte[] MasterKey = Encoding.UTF8.GetBytes("Proyecto64PR_ClaveSecreta2026!!!"); 
         private byte[] EncriptarAES(string texto)
         {
             byte[] iv = new byte[AesIvSize];
             using (var rng = new RNGCryptoServiceProvider())
             {
-                rng.GetBytes(iv); // IV aleatorio distinto cada vez → mismo texto da resultados diferentes
+                rng.GetBytes(iv); ///IV aleatorio distinto cada vez → mismo texto da resultados diferentes
             }
 
             byte[] textoBytes = Encoding.UTF8.GetBytes(texto);
@@ -106,7 +117,7 @@ namespace Servicios_64PR
             {
                 aes.Key = MasterKey;
                 aes.IV = iv;
-                aes.Mode = CipherMode.CBC;   // CBC es el modo estándar y seguro con IV aleatorio
+                aes.Mode = CipherMode.CBC;   /// El CBC es el modo estándar y seguro con IV aleatorio
                 aes.Padding = PaddingMode.PKCS7;
 
                 using (var encryptor = aes.CreateEncryptor())
@@ -115,7 +126,7 @@ namespace Servicios_64PR
                 }
             }
 
-            // Concatenamos IV + cifrado en un solo array para guardar/transmitir
+            /// Concatenamos IV + cifrado en un solo array para guardar
             byte[] resultado = new byte[AesIvSize + cifrado.Length];
             Array.Copy(iv, 0, resultado, 0, AesIvSize);
             Array.Copy(cifrado, 0, resultado, AesIvSize, cifrado.Length);
@@ -128,7 +139,7 @@ namespace Servicios_64PR
             if (datos.Length < AesIvSize)
                 throw new ArgumentException("Los datos son demasiado cortos para contener un IV válido.");
 
-            // Separamos IV y datos cifrados
+            ///Separamos IV y datos cifrados
             byte[] iv = new byte[AesIvSize];
             byte[] cifrado = new byte[datos.Length - AesIvSize];
 
@@ -149,8 +160,9 @@ namespace Servicios_64PR
                 }
             }
         }
-        //estos son 2 metodos helper, son a los que realmente tenemos que llamar, esto se hace asi para no tener que cambiar el tipo
-        //de dato en la base de datos de nvarchar a varbinary
+        /// Estos son 2 metodos helper, son a los que realmente tenemos que llamar, 
+        /// esto se hace asi para no tener que cambiar el tipo
+        ///de dato en la base de datos de nvarchar a varbinary
         public string EncriptarAESBase64(string texto)
         {
             byte[] cifrado = EncriptarAES(texto);

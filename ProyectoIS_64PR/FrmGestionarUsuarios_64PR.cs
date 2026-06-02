@@ -18,24 +18,77 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 namespace ProyectoIS_64PR
 {
 
-    public partial class FrmGestionarUsuarios_64PR : Form
+    public partial class FrmGestionarUsuarios_64PR : Form, IObservadorIdioma_64PR
     {
         BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
         Servicios_64PR.Evento_64PR ev;
 
         BLL_64PR.Usuario gusuarios = new BLL_64PR.Usuario();
+        public Dictionary<string, string> textos;
+
+        ///Mi bandera para el switch
+        ///El uc generico para poder intanciar mis 2 UC, sin tener que crear 2 especificos
         string modo = "consulta";
         UserControl uc;
         List<Usuario> lst;
         public FrmGestionarUsuarios_64PR()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+
             radioButton3.Checked = true;
-            lblModo.Text = modo;
             dgvUsuarios.ReadOnly = true;
             dgvUsuarios.MultiSelect = false;
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             btnGuardar.Enabled = false;
+
+            GestorIdioma_64PR.GetInstance.Suscribir(this); ///Observer del cambio de idioma
+
+            ///Aplico el idioma que ya está cargado
+            textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
+            if (textos.Count > 0)
+                ActualizarIdioma(textos);
+            lblModo.Text = textos["frmGestionUsuarios_lblModoConsulta"];
+        }
+        
+        public void ActualizarIdioma(Dictionary<string, string> textoss)
+        {
+            ///Esto lo que hace es actualizar los textos visibles
+            textos = textoss;
+            if (textos.ContainsKey("frmGestionUsuarios_titulo")) this.Text = textos["frmGestionUsuarios_titulo"];
+            if (textos.ContainsKey("frmGestionUsuarios_btnCrear")) btnCrear.Text = textos["frmGestionUsuarios_btnCrear"];
+            if (textos.ContainsKey("frmGestionUsuarios_btnDesbloquear")) btnDesbloquear.Text = textos["frmGestionUsuarios_btnDesbloquear"];
+            if (textos.ContainsKey("frmGestionUsuarios_btnModificar")) btnModificar.Text = textos["frmGestionUsuarios_btnModificar"];
+            if (textos.ContainsKey("frmGestionUsuarios_btnActDesact")) btnActDesact.Text = textos["frmGestionUsuarios_btnActDesact"];
+            if (textos.ContainsKey("frmGestionUsuarios_btnGuardar")) btnGuardar.Text = textos["frmGestionUsuarios_btnGuardar"];
+            if (textos.ContainsKey("frmGestionUsuarios_rbActivos")) radioButton1.Text = textos["frmGestionUsuarios_rbActivos"];
+            if (textos.ContainsKey("frmGestionUsuarios_rbNoActivos")) radioButton2.Text = textos["frmGestionUsuarios_rbNoActivos"];
+            if (textos.ContainsKey("frmGestionUsuarios_rbTodos")) radioButton3.Text = textos["frmGestionUsuarios_rbTodos"];
+
+            ///Necesario para no perder la cantidad de usuarios en memoria al momento de actualizar el idioma
+            string[] aux = lblCantidad.Text.Split(':'); 
+            if (textos.ContainsKey("frmGestionUsuarios_lblCantidad")) lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + aux[1];
+
+            ///Necesario para no perder el modo al momento de actualizar el idioma
+            switch (modo)
+            {
+                case "consulta":
+                    lblModo.Text = textos["frmGestionUsuarios_lblModoConsulta"];
+                    break;
+                case "crear":
+                    lblModo.Text = textos["frmGestionUsuarios_lblModoCrear"];
+                    break;
+                case "modificar":
+                    lblModo.Text = textos["frmGestionUsuarios_lblModoModificar"];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this);
+            base.OnFormClosed(e);
         }
 
         private void CargaData()
@@ -43,6 +96,7 @@ namespace ProyectoIS_64PR
             dgvUsuarios.DataSource = null;
             lst = gusuarios.Listar();
             dgvUsuarios.DataSource = lst;
+
             if (radioButton1.Checked == true)
             {
                 radioButton1_CheckedChanged(this, EventArgs.Empty);
@@ -56,7 +110,7 @@ namespace ProyectoIS_64PR
         private void btnCrear_Click(object sender, EventArgs e)
         {
             modo = "crear";
-            lblModo.Text = modo;
+            lblModo.Text = textos["frmGestionUsuarios_lblModoCrear"];
             uc = new ucCrearUsuario();
             pnlContenedor.Controls.Clear();
             uc.Dock = DockStyle.Fill;
@@ -69,30 +123,30 @@ namespace ProyectoIS_64PR
             switch (modo)
             {
                 case "consulta":
-                    MessageBox.Show("No esta realizando nigun cambio");
+                    MessageBox.Show(textos["msg_NoCambios"]);
                     break;
                 case "crear":
 
-                    if(uc is ucCrearUsuario ucc) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
+                    if(uc is ucCrearUsuario ucc) ///Esta validacion creo que no es necesaria, pero me sirve para acceder a los metodos del UC de crear
                     {
                         if (!Regex.IsMatch(ucc.DNI(), @"^\d{7,8}$"))
                         {
-                            MessageBox.Show("Ingrese un numero de DNI que tenga entre 7 y 8 digitos");
+                            MessageBox.Show(textos["msg_DNIValido"]);
                             return;
                         }
                         if (!Regex.IsMatch(ucc.Nombre(), @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$"))
                         {
-                            MessageBox.Show("Ingrese un nombre valido");
+                            MessageBox.Show(textos["msg_NombreValido"]);
                             return;
                         }
                         if (!Regex.IsMatch(ucc.Apellido(), @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$"))
                         {
-                            MessageBox.Show("Ingrese un apellido valido");
+                            MessageBox.Show(textos["msg_ApellidoValido"]);
                             return;
                         }
                         if (!Regex.IsMatch(ucc.Email(), @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"))
                         {
-                            MessageBox.Show("Ingrese un email valido");
+                            MessageBox.Show(textos["msg_EmailValido"]);
                             return;
                         }
                         try
@@ -106,28 +160,34 @@ namespace ProyectoIS_64PR
                                 Rol = ucc.Rol(),
                                 Email = ucc.Email(),
                             };
+
+                            ///Linea que me crea el usuario
                             gusuarios.Crear(u);
+
+                            ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "6", 4);
                             bita.RegistrarEvento(ev);
+
                             CargaData();
                             ucc.LimpiarCampos();
                             pnlContenedor.Controls.Clear();
                             uc = null;
-                            lblModo.Text = "consulta";
+                            lblModo.Text = textos["frmGestionUsuarios_lblModoConsulta"]; ;
                             btnGuardar.Enabled = false;
                         }
                         catch (SqlException ex)
                         {
-                            if (ex.Number == 2627 || ex.Number == 2601)//cualquiera de los 2 numeros es para violacion de PK o UQ
+                            ///Cualquiera de los 2 numeros es para violacion de PK o UQ
+                            if (ex.Number == 2627 || ex.Number == 2601)
                             {
                                 if (ex.Message.Contains("PK__USUARIO"))
                                 {
-                                    MessageBox.Show("El DNI ya se encuentra registrado en el sistema.",
+                                    MessageBox.Show(textos["msg_DNIDuplicado"],
                                                     "DNI duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                                 else if (ex.Message.Contains("UQ__USUARIO"))
                                 {
-                                    MessageBox.Show("El email ingresado ya está registrado en el sistema.",
+                                    MessageBox.Show(textos["msg_EmailDuplicado"],
                                                     "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
@@ -135,7 +195,7 @@ namespace ProyectoIS_64PR
                     }
                     break;
                 case "modificar":
-                    if (uc is ucModificarUsuario ucm) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
+                    if (uc is ucModificarUsuario ucm) ///Esta validacion creo que no es necesaria, pero me sirve para acceder a los metodos del UC
                     {
                         if (!Regex.IsMatch(ucm.Email(), @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"))
                         {
@@ -144,24 +204,31 @@ namespace ProyectoIS_64PR
                         }
                         try
                         {
+                            ///Obtengo el usuario del DGV
                             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
                             u.Rol = ucm.Rol();
                             u.Email = ucm.Email();
+
+                            ///Linea que me modifica el usuario luego de asignarlo los nuevos valores
                             gusuarios.Modificar(u);
+
+                            ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "7", 4);
                             bita.RegistrarEvento(ev);
+
                             CargaData();
                             ucm.LimpiarCampos();
                             pnlContenedor.Controls.Clear();
                             uc = null;
-                            lblModo.Text = "consulta";
+                            lblModo.Text = textos["frmGestionUsuarios_lblModoConsulta"];
                             btnGuardar.Enabled = false;
                         }
                         catch (SqlException ex)
                         {
-                            if (ex.Number == 2627 || ex.Number == 2601)//cualquiera de los 2 numeros es para violacion de PK o UQ
+                            ///Cualquiera de los 2 numeros es para violacion de PK o UQ
+                            if (ex.Number == 2627 || ex.Number == 2601)
                             {
-                                if (ex.Message.Contains("UQ__USUARIO"))
+                                if (ex.Message.Contains("UQ__USUARIO")) ///Validacion no necesaria, ya que el unico campo que se puede actualizar que tiene UQ es el mail
                                 {
                                     MessageBox.Show("El email ingresado ya está registrado en el sistema.",
                                                     "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -175,12 +242,18 @@ namespace ProyectoIS_64PR
 
         private void btnDesbloquear_Click(object sender, EventArgs e)
         {
+            ///Obtengo el usuario del DGV
             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
+
             if (u.Bloqueado == true)
             {
+                ///Linea que me desloquea el usuario
                 gusuarios.Desbloquear(u);
+
+                ///Registro el evento en bitacora
                 ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8", 4);
                 bita.RegistrarEvento(ev);
+
                 CargaData();
             }
             else
@@ -191,20 +264,24 @@ namespace ProyectoIS_64PR
 
         private void btnActDesact_Click(object sender, EventArgs e)
         {
+            ///Obtengo el usuario del DGV
             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
             if (u.Login == SessionManager.GetInstance.Usuario.Login)
             {
                 MessageBox.Show("No se puede desactivar al usuario en sesion");
                 return;
             }
+
+            ///Linea que me cambia el estado del usuario
             gusuarios.Actdesact(u);
+
             CargaData();
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
             modo = "modificar";
-            lblModo.Text = modo;
+            lblModo.Text = textos["frmGestionUsuarios_lblModoModificar"];
             uc = new ucModificarUsuario();
             pnlContenedor.Controls.Clear();
             uc.Dock = DockStyle.Fill;
@@ -216,8 +293,9 @@ namespace ProyectoIS_64PR
         {
             if (e.RowIndex >= 0)
             {
+                ///Obtengo el usuario del DGV
                 Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
-                if (uc is ucModificarUsuario ucm) //esta validacion creo q no es necesaria, pero me sirve para acceder a los metodos del UC
+                if (uc is ucModificarUsuario ucm) ///esta validacion creo que no es necesaria, pero me sirve para acceder a los metodos del UC
                 {
                     ucm.EscribirControles(u);
                 }
@@ -234,27 +312,27 @@ namespace ProyectoIS_64PR
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            //activos
+            ///Activos
             if (radioButton1.Checked == true)
             {
                 radioButton2.Checked = false;
                 radioButton3.Checked = false;
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = lst.Where(u => u.Activo == true).ToList();
-                lblCantidad.Text = "Cantidad de usuarios: " + lst.Where(u => u.Activo == true).ToList().Count();
+                lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Where(u => u.Activo == true).ToList().Count();
             }
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            //no activos
+            ///No activos
             if (radioButton2.Checked == true)
             {
                 radioButton1.Checked = false;
                 radioButton3.Checked = false;
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = lst.Where(u => u.Activo == false).ToList();
-                lblCantidad.Text = "Cantidad de usuarios: " + lst.Where(u => u.Activo == false).ToList().Count();
+                lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Where(u => u.Activo == false).ToList().Count();
 
             }
         }
@@ -267,9 +345,9 @@ namespace ProyectoIS_64PR
                 radioButton2.Checked = false;
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = lst;
-                if(lst != null)  //if necesario para que no ejecute esta linea de codigo durante la construccion del frm
+                if(lst != null)  ///Condicional necesario para que no ejecute esta linea de codigo durante la construccion del frm
                 {
-                    lblCantidad.Text = "Cantidad de usuarios: " + lst.Count.ToString();
+                    lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Count.ToString();
                 }
             }
         }
@@ -277,11 +355,12 @@ namespace ProyectoIS_64PR
         private void FrmGestionarUsuarios_64PR_Load(object sender, EventArgs e)
         {
             CargaData();
-            lblCantidad.Text = "Cantidad de usuarios: " + lst.Count.ToString();
+            lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Count.ToString();
         }
 
         private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            ///Pongo en rojo los usuarios desactivados
             foreach (DataGridViewRow row in dgvUsuarios.Rows)
             {
                 if (!(bool)row.Cells["Activo"].Value)
