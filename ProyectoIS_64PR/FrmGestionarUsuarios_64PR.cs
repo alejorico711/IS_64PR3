@@ -166,6 +166,7 @@ namespace ProyectoIS_64PR
 
                             ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "6", 4);
+                            MessageBox.Show("Usuario creado con exito. El login asignado es: " + u.Login);
                             bita.RegistrarEvento(ev);
 
                             CargaData();
@@ -214,6 +215,7 @@ namespace ProyectoIS_64PR
 
                             ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "7", 4);
+                            MessageBox.Show("Usuario modificado con exito.");
                             bita.RegistrarEvento(ev);
 
                             CargaData();
@@ -252,6 +254,7 @@ namespace ProyectoIS_64PR
 
                 ///Registro el evento en bitacora
                 ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8", 4);
+                MessageBox.Show("Usuario desbloqueado con exito.");
                 bita.RegistrarEvento(ev);
 
                 CargaData();
@@ -275,6 +278,9 @@ namespace ProyectoIS_64PR
             ///Linea que me cambia el estado del usuario
             gusuarios.Actdesact(u);
 
+            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", u.Activo == true ? "9" : "10", 4);
+             bita.RegistrarEvento(ev);
+            MessageBox.Show("Operacion realizada con exito.");
             CargaData();
         }
 
