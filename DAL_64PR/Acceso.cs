@@ -42,7 +42,7 @@ namespace DAL_64PR
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=.;Initial Catalog=BD_64PR;Integrated Security=True;TrustServerCertificate=True"; //JULIÁN
+                    conexion.ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=BD_64PR;Integrated Security=True;TrustServerCertificate=True"; //JULIÁN
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }

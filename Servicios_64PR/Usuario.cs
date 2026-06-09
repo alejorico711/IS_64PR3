@@ -41,9 +41,9 @@ namespace Servicios_64PR
             set { _login = value; }
         }
 
-        private string _rol;
+        private Rol_64PR _rol;
 
-        public string Rol
+        public Rol_64PR Rol
         {
             get { return _rol; }
             set { _rol = value; }

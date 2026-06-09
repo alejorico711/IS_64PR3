@@ -14,10 +14,12 @@ namespace ProyectoIS_64PR
 {
     public partial class ucCrearUsuario : UserControl, IObservadorIdioma_64PR
     {
+        BLL_64PR.Rol_64PR groles = new BLL_64PR.Rol_64PR();
         Dictionary<string, string> textos;
         public ucCrearUsuario()
         {
             InitializeComponent();
+            cmbRol.DataSource = groles.ListarRoles();
             cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbRol.SelectedIndex = 0;
 
@@ -48,9 +50,10 @@ namespace ProyectoIS_64PR
             return txtApellido.Text.Trim();
         }
 
-        public string Rol()
+        public int Rol()
         {
-            return cmbRol.Text.Trim();
+            ///Este +1 es necesario para evitar el indice 0
+            return cmbRol.SelectedIndex+1;
         }
 
         public string Email()

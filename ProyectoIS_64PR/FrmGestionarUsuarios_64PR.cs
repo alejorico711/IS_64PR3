@@ -157,9 +157,10 @@ namespace ProyectoIS_64PR
                                 Apellido = ucc.Apellido(),
                                 Nombre = ucc.Nombre(),
                                 Login = ucc.Nombre() + "." + ucc.Apellido(),
-                                Rol = ucc.Rol(),
+                                Rol = new Servicios_64PR.Rol_64PR(),
                                 Email = ucc.Email(),
                             };
+                            u.Rol.Id = ucc.Rol();
 
                             ///Linea que me crea el usuario
                             gusuarios.Crear(u);
@@ -207,7 +208,7 @@ namespace ProyectoIS_64PR
                         {
                             ///Obtengo el usuario del DGV
                             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
-                            u.Rol = ucm.Rol();
+                            u.Rol.Id = ucm.Rol();
                             u.Email = ucm.Email();
 
                             ///Linea que me modifica el usuario luego de asignarlo los nuevos valores

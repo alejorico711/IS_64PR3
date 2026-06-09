@@ -13,9 +13,11 @@ namespace ProyectoIS_64PR
 {
     public partial class ucModificarUsuario : UserControl
     {
+        BLL_64PR.Rol_64PR groles = new BLL_64PR.Rol_64PR();
         public ucModificarUsuario()
         {
             InitializeComponent();
+            cmbRol.DataSource = groles.ListarRoles();
             cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbRol.SelectedIndex = 0;
         }
@@ -28,13 +30,14 @@ namespace ProyectoIS_64PR
         /// </summary>
         public void EscribirControles(Servicios_64PR.Usuario u)
         {
-            cmbRol.Text = u.Rol;
+            cmbRol.Text = u.Rol.Nombre;
             txtEmail.Text = u.Email;
         }
 
-        public string Rol()
+        public int Rol()
         {
-            return cmbRol.Text.Trim();
+            ///Este +1 es necesario para evitarl el indice 0
+            return cmbRol.SelectedIndex+1;
         }
 
         public string Email()

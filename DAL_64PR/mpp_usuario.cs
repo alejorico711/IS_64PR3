@@ -55,7 +55,7 @@ namespace DAL_64PR
                 {
                     parametros[3] = new SqlParameter("@Login", (u.Login + (fa + 1).ToString())); //el +1 es necesario para que la primera vez que ocurra la repeticion no use el numero 1
                 }
-                parametros[4] = new SqlParameter("@Rol", u.Rol);
+                parametros[4] = new SqlParameter("@Rol", u.Rol.Id);
                 parametros[5] = new SqlParameter("@Email", Encriptación.Instancia.EncriptarAESBase64(u.Email));
                 parametros[6] = new SqlParameter("@Contraseña", Encriptación.Instancia.Encriptar(u.Apellido + u.DNI));
                 fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
@@ -79,7 +79,7 @@ namespace DAL_64PR
         {
             List<Servicios_64PR.Usuario> lista = new List<Servicios_64PR.Usuario>();
 
-            string query = "SELECT * FROM USUARIO_64PR";
+            string query = "SELECT \r\n    U.[DNI],\r\n    U.[Apellido],\r\n    U.[Nombre],\r\n    U.[Login],\r\n    U.[Email],\r\n    R.[Nombre] AS [Rol], \r\n    U.[Bloqueo],\r\n    U.[Activo],\r\n    U.[Idioma]\r\n,\r\n    U.[PrimeraVez]\r\nFROM \r\n    [dbo].[USUARIO_64PR] U\r\nINNER JOIN \r\n    [dbo].[Roles_64PR] R ON U.[Rol] = R.[ID_Rol];";
             DataTable tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, null);
 
             foreach (DataRow dr in tabla.Rows)
@@ -89,7 +89,9 @@ namespace DAL_64PR
                 u.Nombre = dr["Nombre"].ToString();
                 u.Apellido = dr["Apellido"].ToString();
                 u.Login = dr["Login"].ToString();
-                u.Rol = dr["Rol"].ToString();
+                Servicios_64PR.Rol_64PR r = new Servicios_64PR.Rol_64PR();
+                u.Rol = r;
+                u.Rol.Nombre = dr["Rol"].ToString();
                 u.Email = Encriptación.Instancia.DesencriptarAESBase64(dr["Email"].ToString());
                 u.Activo = bool.Parse(dr["Activo"].ToString());
                 u.Bloqueado = bool.Parse(dr["Bloqueo"].ToString());
@@ -106,7 +108,7 @@ namespace DAL_64PR
                 string query = "UPDATE USUARIO_64PR SET Rol = @Rol, Email = @Email WHERE DNI = @DNI";
                 SqlParameter[] parametros = new SqlParameter[3];
                 parametros[0] = new SqlParameter("@DNI", u.DNI);
-                parametros[1] = new SqlParameter("@Rol", u.Rol);
+                parametros[1] = new SqlParameter("@Rol", u.Rol.Id);
                 parametros[2] = new SqlParameter("@Email", Encriptación.Instancia.EncriptarAESBase64(u.Email));
                 int fa = DAL_64PR.Acceso.Instancia.escribirQuery(query, parametros);
             }
@@ -178,13 +180,97 @@ namespace DAL_64PR
                 u.Nombre = dr["Nombre"].ToString();
                 u.Apellido = dr["Apellido"].ToString();
                 u.Login = dr["Login"].ToString();
-                u.Rol = dr["Rol"].ToString();
+                u.Rol = u.Rol = ObtenerRolCompleto(int.Parse(dr["Rol"].ToString()));
                 u.Email = dr["Email"].ToString();
                 u.Activo = bool.Parse(dr["Activo"].ToString());
                 u.Bloqueado = bool.Parse(dr["Bloqueo"].ToString());
                 u.PrimeraVez = bool.Parse(dr["PrimeraVez"].ToString());
             }
             return u;
+        }
+
+        private Servicios_64PR.Rol_64PR ObtenerRolCompleto(int idRol)
+        {
+            ///Funcion un tanto compleja para obtener el arbol completo de permisos del usuario al momemento del login
+            /// 1. Datos básicos del rol
+            string query = "SELECT ID_Rol, Nombre FROM Roles_64PR WHERE ID_Rol = @IdRol";
+            SqlParameter[] parametros = new SqlParameter[] { new SqlParameter("@IdRol", idRol) };
+            DataTable tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            Servicios_64PR.Rol_64PR rol = new Servicios_64PR.Rol_64PR();
+            rol.Id = Convert.ToInt32(tabla.Rows[0]["ID_Rol"]);
+            rol.Nombre = tabla.Rows[0]["Nombre"].ToString();
+
+            /// 2. Patentes directas del rol
+            query = @"SELECT P.ID_Patente, P.Nombre 
+              FROM Patente_64PR P
+              INNER JOIN RolPatente_64PR RP ON P.ID_Patente = RP.ID_Patente
+              WHERE RP.ID_Rol = @IdRol";
+            parametros = new SqlParameter[] { new SqlParameter("@IdRol", idRol) };
+            tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            foreach (DataRow dr in tabla.Rows)
+            {
+                Servicios_64PR.Permiso_64PR p = new Servicios_64PR.Permiso_64PR();
+                p.Id = Convert.ToInt32(dr["ID_Patente"]);
+                p.Nombre = dr["Nombre"].ToString();
+                rol.Agregar(p);
+            }
+
+            /// 3. Familias del rol (con sus patentes adentro)
+            query = @"SELECT F.ID_Familia, F.Nombre 
+              FROM Familia_64PR F
+              INNER JOIN RolFamilia_64PR RF ON F.ID_Familia = RF.ID_Familia
+              WHERE RF.ID_Rol = @IdRol";
+            parametros = new SqlParameter[] { new SqlParameter("@IdRol", idRol) };
+            tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            foreach (DataRow dr in tabla.Rows)
+            {
+                Servicios_64PR.Familia_64PR f = new Servicios_64PR.Familia_64PR();
+                f.Id = Convert.ToInt32(dr["ID_Familia"]);
+                f.Nombre = dr["Nombre"].ToString();
+                CargarHijosFamilia(f); /// carga las patentes y subfamilias de esta familia
+                rol.Agregar(f);
+            }
+
+            return rol;
+        }
+
+        private void CargarHijosFamilia(Servicios_64PR.Familia_64PR familia)
+        {
+            /// Patentes de esta familia
+            string query = @"SELECT P.ID_Patente, P.Nombre 
+                     FROM Patente_64PR P
+                     INNER JOIN PatenteFamilia_64PR PF ON P.ID_Patente = PF.ID_Patente
+                     WHERE PF.ID_Familia = @IdFamilia";
+            SqlParameter[] parametros = new SqlParameter[] { new SqlParameter("@IdFamilia", familia.Id) };
+            DataTable tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            foreach (DataRow dr in tabla.Rows)
+            {
+                Servicios_64PR.Permiso_64PR p = new Servicios_64PR.Permiso_64PR();
+                p.Id = Convert.ToInt32(dr["ID_Patente"]);
+                p.Nombre = dr["Nombre"].ToString();
+                familia.Agregar(p);
+            }
+
+            /// Subfamilias de esta familia (tabla Familia_N)
+            query = @"SELECT F.ID_Familia, F.Nombre 
+              FROM Familia_64PR F
+              INNER JOIN Familia_N_64PR FN ON F.ID_Familia = FN.ID_FamiliaHija
+              WHERE FN.ID_FamiliaPadre = @IdFamilia";
+            parametros = new SqlParameter[] { new SqlParameter("@IdFamilia", familia.Id) };
+            tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, parametros);
+
+            foreach (DataRow dr in tabla.Rows)
+            {
+                Servicios_64PR.Familia_64PR sub = new Servicios_64PR.Familia_64PR();
+                sub.Id = Convert.ToInt32(dr["ID_Familia"]);
+                sub.Nombre = dr["Nombre"].ToString();
+                CargarHijosFamilia(sub); /// recursivo para subfamilias de subfamilias
+                familia.Agregar(sub);
+            }
         }
 
         public void CambiarClave(string nueva, string confirmacion)
