@@ -17,6 +17,7 @@
   "frmMenu_cerrarSesion": "Cerrar sesión",
   "frmMenu_salir": "Salir",
   "frmMenu_idioma": "Idioma",
+  "frmMenu_gestionFamilias": "Gestionar familias",
 
   "frmCambiarClave_titulo": "Cambiar contraseña",
   "frmCambiarClave_lblActual": "Contraseña actual:",

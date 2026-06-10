@@ -17,6 +17,7 @@
   "frmMenu_cerrarSesion": "Log out",
   "frmMenu_salir": "Exit",
   "frmMenu_idioma": "Language",
+  "frmMenu_gestionFamilias": "Manage families",
 
   "frmCambiarClave_titulo": "Change password",
   "frmCambiarClave_lblActual": "Current password:",

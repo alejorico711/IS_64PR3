@@ -32,17 +32,18 @@ namespace ProyectoIS_64PR
         public void ActualizarIdioma(Dictionary<string, string> textos)
         {
             if (textos.ContainsKey("frmMenu_titulo")) this.Text = textos["frmMenu_titulo"];
-            if (textos.ContainsKey("frmMenu_login")) loginToolStripMenuItem.Text = textos["frmMenu_login"];
+            if (textos.ContainsKey("frmMenu_login")) loginToolStripMenuItem1.Text = textos["frmMenu_login"];
             if (textos.ContainsKey("frmMenu_gestionUsuarios")) gestionarUsuariosToolStripMenuItem.Text = textos["frmMenu_gestionUsuarios"];
-            if (textos.ContainsKey("frmMenu_cambiarContrasena")) cambiarContraseñaToolStripMenuItem.Text = textos["frmMenu_cambiarContrasena"];
+            if (textos.ContainsKey("frmMenu_cambiarContrasena")) cambiarContraseñaToolStripMenuItem1.Text = textos["frmMenu_cambiarContrasena"];
             if (textos.ContainsKey("frmMenu_eventos")) eventosToolStripMenuItem.Text = textos["frmMenu_eventos"];
-            if (textos.ContainsKey("frmMenu_cerrarSesion")) cerrarSesionToolStripMenuItem.Text = textos["frmMenu_cerrarSesion"];
-            if (textos.ContainsKey("frmMenu_salir")) salirToolStripMenuItem.Text = textos["frmMenu_salir"];
-            if (textos.ContainsKey("frmMenu_idioma")) idiomaToolStripMenuItem.Text = textos["frmMenu_idioma"];
+            if (textos.ContainsKey("frmMenu_cerrarSesion")) cerrarSesionToolStripMenuItem1.Text = textos["frmMenu_cerrarSesion"];
+            if (textos.ContainsKey("frmMenu_salir")) salirToolStripMenuItem1.Text = textos["frmMenu_salir"];
+            if (textos.ContainsKey("frmMenu_idioma")) idiomaToolStripMenuItem1.Text = textos["frmMenu_idioma"];
+            if (textos.ContainsKey("frmMenu_gestionFamilias")) gestionarPermisosToolStripMenuItem.Text = textos["frmMenu_gestionFamilias"];
         }
         private void AgregarSelectorIdioma()
         {
-            var itemIdioma = idiomaToolStripMenuItem;
+            var itemIdioma = idiomaToolStripMenuItem1;
 
             foreach (string codigo in GestorIdioma_64PR.GetInstance.IdiomasDisponibles())
             {
@@ -57,8 +58,7 @@ namespace ProyectoIS_64PR
                 };
                 itemIdioma.DropDownItems.Add(subItem);
             }
-
-            menuStrip1.Items.Add(itemIdioma);
+            configuracionToolStripMenuItem.DropDownItems.Add(itemIdioma);
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -94,7 +94,27 @@ namespace ProyectoIS_64PR
             AbrirFormularioHijo(new FrmGestionarUsuarios_64PR());
         }
 
-        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void eventosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmBitacora_64PR());
+        }
+
+        private void gestionarPermisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmGestionFamilias_64PR());
+        }
+
+        private void loginToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmLogin_64PR());
+        }
+
+        private void cambiarContraseñaToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmCambiarClave_64PR());
+        }
+
+        private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
             string msg = textos.ContainsKey("msg_cerrarSesion") ? textos["msg_cerrarSesion"] : "¿Está seguro de que desea cerrar la sesión?";
@@ -120,29 +140,9 @@ namespace ProyectoIS_64PR
                 fLogin.Show();
                 this.Close();
             }
-
-            /*var resultado = MessageBox.Show(
-                "¿Está seguro de que desea cerrar la sesión?",
-                "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (resultado == DialogResult.Yes)
-            {
-                BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
-                bita3.RegistrarEvento(ev3);
-                SessionManager.GetInstance.Logout();
-                var fLogin = new FrmLogin_64PR();
-                fLogin.Show();
-                this.Close();
-            }*/
         }
 
-        private void cambiarContraseñaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new FrmCambiarClave_64PR());
-        }
-
-        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        private void salirToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ///Guardamos el idioma en BD
             string loginActual = SessionManager.GetInstance.Usuario.Login;
@@ -156,23 +156,6 @@ namespace ProyectoIS_64PR
 
             SessionManager.GetInstance.Logout();
             Application.Exit();
-
-
-            /*BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
-            Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "5", 5);
-            bita3.RegistrarEvento(ev3);
-            SessionManager.GetInstance.Logout();
-            Application.Exit();*/
-        }
-
-        private void eventosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new FrmBitacora_64PR());
-        }
-
-        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new FrmLogin_64PR());
         }
     }
 }
