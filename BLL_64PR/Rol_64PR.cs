@@ -15,6 +15,11 @@ namespace BLL_64PR
             mpp.CrearFamilia(nombre, hijos);
         }
 
+        public void EliminarFamilia(int id)
+        {
+            mpp.EliminarFamilia(id);
+        }
+
         public List<Servicios_64PR.Rol_64PR> ListarRoles()
         {
             return mpp.ListarRoles();

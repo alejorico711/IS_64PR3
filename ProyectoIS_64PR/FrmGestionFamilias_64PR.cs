@@ -148,5 +148,37 @@ namespace ProyectoIS_64PR
                 MessageBox.Show("Error al crear la familia: " + ex.Message);
             }
         }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode == null) return;
+
+            Servicios_64PR.Rol_64PR nodoSeleccionado = (Servicios_64PR.Rol_64PR)treeView1.SelectedNode.Tag;
+
+            if (!(nodoSeleccionado is Servicios_64PR.Familia_64PR))
+            {
+                MessageBox.Show("Solo podés eliminar familias.");
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show(
+                $"¿Seguro que querés eliminar la familia '{nodoSeleccionado.Nombre}'?",
+                "Confirmar eliminación",
+                MessageBoxButtons.YesNo);
+
+            if (confirm != DialogResult.Yes) return;
+
+            try
+            {
+                bllRol.EliminarFamilia(nodoSeleccionado.Id);
+                MessageBox.Show("Familia eliminada correctamente.");
+                CargaPermisosYFamilias();
+                treeView2.Nodes.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar: " + ex.Message);
+            }
+        }
     }
 }

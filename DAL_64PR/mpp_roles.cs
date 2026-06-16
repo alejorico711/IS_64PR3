@@ -187,5 +187,23 @@ namespace DAL_64PR
                 throw;
             }
         }
+
+        public void EliminarFamilia(int id)
+        {
+            SqlParameter[] parametros = new SqlParameter[]
+            {
+                new SqlParameter("@IdFamilia", id)
+            };
+            ///Esto se hace asi, ya que familiaN tiene 2 FK y el cascade se puede poner en uno solo para no generar dependencias circulares
+            /// 1. Sacarla de donde era hija (manual)
+            DAL_64PR.Acceso.Instancia.escribirQuery(
+                "DELETE FROM Familia_N_64PR WHERE ID_FamiliaHija = @IdFamilia",
+                parametros);    
+
+            /// 2. Eliminar la familia (CASCADE hace el resto)
+            DAL_64PR.Acceso.Instancia.escribirQuery(
+                "DELETE FROM Familia_64PR WHERE ID_Familia = @IdFamilia",
+                parametros);
+        }
     }
 }
