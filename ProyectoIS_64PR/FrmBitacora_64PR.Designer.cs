@@ -57,7 +57,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(491, 403);
+            this.label7.Location = new System.Drawing.Point(227, 383);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 16);
             this.label7.TabIndex = 21;
@@ -66,7 +66,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(491, 367);
+            this.label6.Location = new System.Drawing.Point(241, 346);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(49, 16);
             this.label6.TabIndex = 20;
@@ -75,7 +75,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(2, 403);
+            this.label5.Location = new System.Drawing.Point(2, 380);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 16);
             this.label5.TabIndex = 19;
@@ -84,7 +84,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(210, 404);
+            this.label4.Location = new System.Drawing.Point(334, 421);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(61, 16);
             this.label4.TabIndex = 18;
@@ -93,7 +93,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(192, 364);
+            this.label3.Location = new System.Drawing.Point(2, 417);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(79, 16);
             this.label3.TabIndex = 17;
@@ -102,7 +102,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 364);
+            this.label2.Location = new System.Drawing.Point(2, 341);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(40, 16);
             this.label2.TabIndex = 16;
@@ -110,9 +110,9 @@
             // 
             // btnImprimir
             // 
-            this.btnImprimir.Location = new System.Drawing.Point(706, 415);
+            this.btnImprimir.Location = new System.Drawing.Point(722, 399);
             this.btnImprimir.Name = "btnImprimir";
-            this.btnImprimir.Size = new System.Drawing.Size(75, 23);
+            this.btnImprimir.Size = new System.Drawing.Size(75, 26);
             this.btnImprimir.TabIndex = 15;
             this.btnImprimir.Text = "Imprimir";
             this.btnImprimir.UseVisualStyleBackColor = true;
@@ -120,9 +120,9 @@
             // 
             // btnAplicar
             // 
-            this.btnAplicar.Location = new System.Drawing.Point(706, 386);
+            this.btnAplicar.Location = new System.Drawing.Point(722, 367);
             this.btnAplicar.Name = "btnAplicar";
-            this.btnAplicar.Size = new System.Drawing.Size(75, 23);
+            this.btnAplicar.Size = new System.Drawing.Size(75, 26);
             this.btnAplicar.TabIndex = 14;
             this.btnAplicar.Text = "Aplicar";
             this.btnAplicar.UseVisualStyleBackColor = true;
@@ -130,9 +130,9 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(706, 357);
+            this.btnLimpiar.Location = new System.Drawing.Point(722, 336);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(75, 23);
+            this.btnLimpiar.Size = new System.Drawing.Size(75, 26);
             this.btnLimpiar.TabIndex = 13;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@
             this.dgvEventos.Name = "dgvEventos";
             this.dgvEventos.RowHeadersWidth = 51;
             this.dgvEventos.RowTemplate.Height = 24;
-            this.dgvEventos.Size = new System.Drawing.Size(759, 321);
+            this.dgvEventos.Size = new System.Drawing.Size(759, 299);
             this.dgvEventos.TabIndex = 12;
             // 
             // label1
@@ -159,7 +159,7 @@
             // 
             // dtpInicio
             // 
-            this.dtpInicio.Location = new System.Drawing.Point(277, 363);
+            this.dtpInicio.Location = new System.Drawing.Point(92, 416);
             this.dtpInicio.MaxDate = new System.DateTime(2026, 5, 19, 0, 0, 0, 0);
             this.dtpInicio.MinDate = new System.DateTime(2026, 4, 1, 0, 0, 0, 0);
             this.dtpInicio.Name = "dtpInicio";
@@ -169,7 +169,7 @@
             // 
             // dtpFin
             // 
-            this.dtpFin.Location = new System.Drawing.Point(277, 399);
+            this.dtpFin.Location = new System.Drawing.Point(406, 416);
             this.dtpFin.MaxDate = new System.DateTime(2026, 5, 19, 0, 0, 0, 0);
             this.dtpFin.MinDate = new System.DateTime(2026, 4, 1, 0, 0, 0, 0);
             this.dtpFin.Name = "dtpFin";
@@ -180,7 +180,7 @@
             // cmbLogins
             // 
             this.cmbLogins.FormattingEnabled = true;
-            this.cmbLogins.Location = new System.Drawing.Point(48, 361);
+            this.cmbLogins.Location = new System.Drawing.Point(68, 338);
             this.cmbLogins.Name = "cmbLogins";
             this.cmbLogins.Size = new System.Drawing.Size(121, 24);
             this.cmbLogins.TabIndex = 25;
@@ -188,7 +188,7 @@
             // cmbModulos
             // 
             this.cmbModulos.FormattingEnabled = true;
-            this.cmbModulos.Location = new System.Drawing.Point(52, 400);
+            this.cmbModulos.Location = new System.Drawing.Point(68, 377);
             this.cmbModulos.Name = "cmbModulos";
             this.cmbModulos.Size = new System.Drawing.Size(121, 24);
             this.cmbModulos.TabIndex = 26;
@@ -196,7 +196,7 @@
             // cmbTipos
             // 
             this.cmbTipos.FormattingEnabled = true;
-            this.cmbTipos.Location = new System.Drawing.Point(546, 361);
+            this.cmbTipos.Location = new System.Drawing.Point(303, 341);
             this.cmbTipos.Name = "cmbTipos";
             this.cmbTipos.Size = new System.Drawing.Size(121, 24);
             this.cmbTipos.TabIndex = 27;
@@ -210,7 +210,7 @@
             "3",
             "4",
             "5"});
-            this.cmbCriticidad.Location = new System.Drawing.Point(560, 399);
+            this.cmbCriticidad.Location = new System.Drawing.Point(303, 379);
             this.cmbCriticidad.Name = "cmbCriticidad";
             this.cmbCriticidad.Size = new System.Drawing.Size(121, 24);
             this.cmbCriticidad.TabIndex = 28;
@@ -218,7 +218,7 @@
             // cbTipo
             // 
             this.cbTipo.AutoSize = true;
-            this.cbTipo.Location = new System.Drawing.Point(673, 365);
+            this.cbTipo.Location = new System.Drawing.Point(430, 345);
             this.cbTipo.Name = "cbTipo";
             this.cbTipo.Size = new System.Drawing.Size(18, 17);
             this.cbTipo.TabIndex = 29;
@@ -228,7 +228,7 @@
             // cbCriticidad
             // 
             this.cbCriticidad.AutoSize = true;
-            this.cbCriticidad.Location = new System.Drawing.Point(687, 399);
+            this.cbCriticidad.Location = new System.Drawing.Point(430, 384);
             this.cbCriticidad.Name = "cbCriticidad";
             this.cbCriticidad.Size = new System.Drawing.Size(18, 17);
             this.cbCriticidad.TabIndex = 30;
@@ -238,7 +238,7 @@
             // cbFin
             // 
             this.cbFin.AutoSize = true;
-            this.cbFin.Location = new System.Drawing.Point(467, 402);
+            this.cbFin.Location = new System.Drawing.Point(596, 419);
             this.cbFin.Name = "cbFin";
             this.cbFin.Size = new System.Drawing.Size(18, 17);
             this.cbFin.TabIndex = 31;
@@ -248,7 +248,7 @@
             // cbInicio
             // 
             this.cbInicio.AutoSize = true;
-            this.cbInicio.Location = new System.Drawing.Point(467, 365);
+            this.cbInicio.Location = new System.Drawing.Point(282, 418);
             this.cbInicio.Name = "cbInicio";
             this.cbInicio.Size = new System.Drawing.Size(18, 17);
             this.cbInicio.TabIndex = 32;
@@ -258,7 +258,7 @@
             // cbModulo
             // 
             this.cbModulo.AutoSize = true;
-            this.cbModulo.Location = new System.Drawing.Point(179, 402);
+            this.cbModulo.Location = new System.Drawing.Point(195, 384);
             this.cbModulo.Name = "cbModulo";
             this.cbModulo.Size = new System.Drawing.Size(18, 17);
             this.cbModulo.TabIndex = 33;
@@ -268,7 +268,7 @@
             // cbLogin
             // 
             this.cbLogin.AutoSize = true;
-            this.cbLogin.Location = new System.Drawing.Point(175, 364);
+            this.cbLogin.Location = new System.Drawing.Point(195, 340);
             this.cbLogin.Name = "cbLogin";
             this.cbLogin.Size = new System.Drawing.Size(18, 17);
             this.cbLogin.TabIndex = 34;
@@ -306,6 +306,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmBitacora_64PR";
             this.Text = "FrmBitacora_64PR";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmBitacora_64PR_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEventos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

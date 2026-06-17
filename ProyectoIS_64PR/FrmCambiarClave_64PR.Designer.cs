@@ -110,6 +110,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmCambiarClave_64PR";
             this.Text = "FrmCambiarClave_64PR";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmCambiarClave_64PR_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

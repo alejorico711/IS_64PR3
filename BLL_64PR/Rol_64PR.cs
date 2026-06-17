@@ -28,5 +28,35 @@ namespace BLL_64PR
         {
             return mpp.ObtenerTodosLosNodos();
         }
+
+        public void ModificarFamilia(int id, string nombre, List<Servicios_64PR.Rol_64PR> hijos)
+        {
+            mpp.ModificarFamilia(id, nombre, hijos);
+        }
+
+        public void CrearRol(string nombre, List<Servicios_64PR.Rol_64PR> hijos)
+        {
+            mpp.CrearRol(nombre, hijos);
+        }
+
+        public void ModificarRol(int id, string nombre, List<Servicios_64PR.Rol_64PR> hijos)
+        {
+            mpp.ModificarRol(id, nombre, hijos);
+        }
+
+        public void EliminarRol(int id, bool reasignarUsuarios)
+        {
+            mpp.EliminarRol(id, reasignarUsuarios);
+        }
+
+        public int ContarUsuariosConRol(int idRol)
+        {
+            return mpp.ContarUsuariosConRol(idRol);
+        }
+
+        public Servicios_64PR.Rol_64PR ObtenerRolCompleto(int idRol)
+        {
+            return mpp.ObtenerRolCompleto(idRol);
+        }
     }
 }

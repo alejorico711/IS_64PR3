@@ -28,6 +28,7 @@ namespace ProyectoIS_64PR
 
             ///Agrego el selector de idioma al menú en tiempo de ejecución
             AgregarSelectorIdioma();
+            
         }
         public void ActualizarIdioma(Dictionary<string, string> textos)
         {
@@ -40,6 +41,8 @@ namespace ProyectoIS_64PR
             if (textos.ContainsKey("frmMenu_salir")) salirToolStripMenuItem1.Text = textos["frmMenu_salir"];
             if (textos.ContainsKey("frmMenu_idioma")) idiomaToolStripMenuItem1.Text = textos["frmMenu_idioma"];
             if (textos.ContainsKey("frmMenu_gestionFamilias")) gestionarPermisosToolStripMenuItem.Text = textos["frmMenu_gestionFamilias"];
+            configuracionToolStripMenuItem.Text = textos["configuracion"];
+            gestionarRolesToolStripMenuItem.Text = textos["gestionar_roles"];
         }
         private void AgregarSelectorIdioma()
         {
@@ -59,12 +62,6 @@ namespace ProyectoIS_64PR
                 itemIdioma.DropDownItems.Add(subItem);
             }
             configuracionToolStripMenuItem.DropDownItems.Add(itemIdioma);
-        }
-
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            GestorIdioma_64PR.GetInstance.Desuscribir(this);
-            base.OnFormClosed(e);
         }
         public void AbrirFormularioHijo(Form f)
         {
@@ -156,6 +153,28 @@ namespace ProyectoIS_64PR
 
             SessionManager.GetInstance.Logout();
             Application.Exit();
+        }
+
+        private void gestionarRolesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioHijo(new FrmGestionarRoles_64PR());
+        }
+
+        private void FrmMenu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing) ///pregunta si cerro el usuario desde la "x" o haciendo alt+f4
+            {
+                /// Cancelamos el cierre inmediato de la X para manejarlo nosotros
+                e.Cancel = true;
+
+                /// Invocamos programáticamente el evento Click del menú
+                salirToolStripMenuItem1.PerformClick();
+            }
+        }
+
+        private void FrmMenu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
         }
     }
 }

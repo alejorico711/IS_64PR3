@@ -36,8 +36,8 @@ namespace ProyectoIS_64PR
 
         public int Rol()
         {
-            ///Este +1 es necesario para evitarl el indice 0
-            return cmbRol.SelectedIndex+1;
+            Servicios_64PR.Rol_64PR rol = cmbRol.SelectedItem as Servicios_64PR.Rol_64PR;
+            return rol.Id;
         }
 
         public string Email()

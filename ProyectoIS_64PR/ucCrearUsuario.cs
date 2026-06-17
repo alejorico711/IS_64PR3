@@ -16,10 +16,12 @@ namespace ProyectoIS_64PR
     {
         BLL_64PR.Rol_64PR groles = new BLL_64PR.Rol_64PR();
         Dictionary<string, string> textos;
+        List<Servicios_64PR.Rol_64PR> lst;
         public ucCrearUsuario()
         {
             InitializeComponent();
-            cmbRol.DataSource = groles.ListarRoles();
+            lst = groles.ListarRoles();
+            cmbRol.DataSource = lst;
             cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbRol.SelectedIndex = 0;
 
@@ -52,8 +54,8 @@ namespace ProyectoIS_64PR
 
         public int Rol()
         {
-            ///Este +1 es necesario para evitar el indice 0
-            return cmbRol.SelectedIndex+1;
+            Servicios_64PR.Rol_64PR rol = cmbRol.SelectedItem as Servicios_64PR.Rol_64PR;
+            return rol.Id;
         }
 
         public string Email()

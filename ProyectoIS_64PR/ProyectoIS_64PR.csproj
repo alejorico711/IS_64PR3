@@ -59,6 +59,12 @@
     <Compile Include="FrmCambiarClave_64PR.Designer.cs">
       <DependentUpon>FrmCambiarClave_64PR.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmGestionarRoles_64PR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGestionarRoles_64PR.Designer.cs">
+      <DependentUpon>FrmGestionarRoles_64PR.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmGestionarUsuarios_64PR.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmCambiarClave_64PR.resx">
       <DependentUpon>FrmCambiarClave_64PR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmGestionarRoles_64PR.resx">
+      <DependentUpon>FrmGestionarRoles_64PR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmGestionarUsuarios_64PR.resx">
       <DependentUpon>FrmGestionarUsuarios_64PR.cs</DependentUpon>

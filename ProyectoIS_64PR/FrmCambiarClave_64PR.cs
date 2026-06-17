@@ -40,12 +40,6 @@ namespace ProyectoIS_64PR
             if (textos.ContainsKey("frmCambiarClave_btnConfirmar")) btnConfirmar.Text = textos["frmCambiarClave_btnConfirmar"];
         }
 
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            GestorIdioma_64PR.GetInstance.Desuscribir(this);
-            base.OnFormClosed(e);
-        }
-
         private void btnConfirmar_Click(object sender, EventArgs e)
         {
             try
@@ -102,6 +96,11 @@ namespace ProyectoIS_64PR
                 txtNueva.Clear();
                 txtConfirmar.Clear();
             }
+        }
+
+        private void FrmCambiarClave_64PR_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this);
         }
     }
 }

@@ -38,7 +38,13 @@ namespace ProyectoIS_64PR
             radioButton3.Checked = true;
             dgvUsuarios.ReadOnly = true;
             dgvUsuarios.MultiSelect = false;
+
             dgvUsuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvUsuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvUsuarios.BackgroundColor = SystemColors.Menu;
+            dgvUsuarios.BorderStyle = BorderStyle.None;
+            CargaData();
+
             btnGuardar.Enabled = false;
 
             GestorIdioma_64PR.GetInstance.Suscribir(this); ///Observer del cambio de idioma
@@ -48,12 +54,24 @@ namespace ProyectoIS_64PR
             if (textos.Count > 0)
                 ActualizarIdioma(textos);
             lblModo.Text = textos["frmGestionUsuarios_lblModoConsulta"];
+            lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Count.ToString();
         }
         
         public void ActualizarIdioma(Dictionary<string, string> textoss)
         {
             ///Esto lo que hace es actualizar los textos visibles
             textos = textoss;
+
+            dgvUsuarios.Columns["Apellido"].HeaderText = textos["apellido"];
+            dgvUsuarios.Columns["Nombre"].HeaderText = textos["nombre"];
+            dgvUsuarios.Columns["Login"].HeaderText = textos["login"];
+            dgvUsuarios.Columns["Rol"].HeaderText = textos["rol"];
+            dgvUsuarios.Columns["Email"].HeaderText = textos["email"];
+            dgvUsuarios.Columns["Bloqueado"].HeaderText = textos["bloqueado"];
+            dgvUsuarios.Columns["Activo"].HeaderText = textos["activo"];
+            dgvUsuarios.Columns["PrimeraVez"].HeaderText = textos["primera_vez"];
+
+
             if (textos.ContainsKey("frmGestionUsuarios_titulo")) this.Text = textos["frmGestionUsuarios_titulo"];
             if (textos.ContainsKey("frmGestionUsuarios_btnCrear")) btnCrear.Text = textos["frmGestionUsuarios_btnCrear"];
             if (textos.ContainsKey("frmGestionUsuarios_btnDesbloquear")) btnDesbloquear.Text = textos["frmGestionUsuarios_btnDesbloquear"];
@@ -167,7 +185,7 @@ namespace ProyectoIS_64PR
 
                             ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "6", 4);
-                            MessageBox.Show("Usuario creado con exito. El login asignado es: " + u.Login);
+                            MessageBox.Show(textos["usuario_creado"] + u.Login);
                             bita.RegistrarEvento(ev);
 
                             CargaData();
@@ -185,12 +203,12 @@ namespace ProyectoIS_64PR
                                 if (ex.Message.Contains("PK__USUARIO"))
                                 {
                                     MessageBox.Show(textos["msg_DNIDuplicado"],
-                                                    "DNI duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                    "DNI", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                                 else if (ex.Message.Contains("UQ__USUARIO"))
                                 {
                                     MessageBox.Show(textos["msg_EmailDuplicado"],
-                                                    "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                                    "Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
                         }
@@ -201,7 +219,7 @@ namespace ProyectoIS_64PR
                     {
                         if (!Regex.IsMatch(ucm.Email(), @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"))
                         {
-                            MessageBox.Show("Ingrese un email valido");
+                            MessageBox.Show(textos["mail_invalido"]);
                             return;
                         }
                         try
@@ -216,7 +234,7 @@ namespace ProyectoIS_64PR
 
                             ///Registro el evento en bitacora
                             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "7", 4);
-                            MessageBox.Show("Usuario modificado con exito.");
+                            MessageBox.Show(textos["usuario_modificado"]);
                             bita.RegistrarEvento(ev);
 
                             CargaData();
@@ -233,8 +251,8 @@ namespace ProyectoIS_64PR
                             {
                                 if (ex.Message.Contains("UQ__USUARIO")) ///Validacion no necesaria, ya que el unico campo que se puede actualizar que tiene UQ es el mail
                                 {
-                                    MessageBox.Show("El email ingresado ya está registrado en el sistema.",
-                                                    "Email duplicado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    MessageBox.Show(textos["mail_duplicado"],
+                                                    "Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
                         }
@@ -255,14 +273,14 @@ namespace ProyectoIS_64PR
 
                 ///Registro el evento en bitacora
                 ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8", 4);
-                MessageBox.Show("Usuario desbloqueado con exito.");
+                MessageBox.Show(textos["usuario_desbloqueado"]);
                 bita.RegistrarEvento(ev);
 
                 CargaData();
             }
             else
             {
-                MessageBox.Show("El usuario no se encuentra bloqueado");
+                MessageBox.Show(textos["usuario_no_bloqueado"]);
             }
         }
 
@@ -272,7 +290,7 @@ namespace ProyectoIS_64PR
             Servicios_64PR.Usuario u = dgvUsuarios.SelectedRows[0].DataBoundItem as Servicios_64PR.Usuario;
             if (u.Login == SessionManager.GetInstance.Usuario.Login)
             {
-                MessageBox.Show("No se puede desactivar al usuario en sesion");
+                MessageBox.Show(textos["usuario_en_sesion"]);
                 return;
             }
 
@@ -281,7 +299,7 @@ namespace ProyectoIS_64PR
 
             ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", u.Activo == true ? "9" : "10", 4);
              bita.RegistrarEvento(ev);
-            MessageBox.Show("Operacion realizada con exito.");
+            MessageBox.Show(textos["operacion_exitosa"]);
             CargaData();
         }
 
@@ -361,11 +379,10 @@ namespace ProyectoIS_64PR
 
         private void FrmGestionarUsuarios_64PR_Load(object sender, EventArgs e)
         {
-            CargaData();
-            lblCantidad.Text = textos["frmGestionUsuarios_lblCantidad"] + lst.Count.ToString();
+            
         }
 
-        private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+       /* private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             ///Pongo en rojo los usuarios desactivados
             foreach (DataGridViewRow row in dgvUsuarios.Rows)
@@ -373,6 +390,11 @@ namespace ProyectoIS_64PR
                 if (!(bool)row.Cells["Activo"].Value)
                     row.DefaultCellStyle.BackColor = Color.LightCoral;
             }
+        }*/
+
+        private void FrmGestionarUsuarios_64PR_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
         }
     }
 }

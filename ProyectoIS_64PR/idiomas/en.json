@@ -18,6 +18,8 @@
   "frmMenu_salir": "Exit",
   "frmMenu_idioma": "Language",
   "frmMenu_gestionFamilias": "Manage families",
+  "configuracion": "Settings",
+  "gestionar_roles": "Manage rols",
 
   "frmCambiarClave_titulo": "Change password",
   "frmCambiarClave_lblActual": "Current password:",
@@ -67,5 +69,6 @@
   "lbl_Criticidad": "Severity",
   "btn_Limpiar": "Clear",
   "btn_Aplicar": "Apply",
-  "btn_Imprimir": "Print"
+  "btn_Imprimir": "Print",
+  "Fecha_y_hora": "Date/time"
 }

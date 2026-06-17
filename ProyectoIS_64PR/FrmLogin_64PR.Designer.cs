@@ -110,6 +110,7 @@
             this.Controls.Add(this.txtLogin);
             this.Name = "FrmLogin_64PR";
             this.Text = "FrmLogin_64PR";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmLogin_64PR_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

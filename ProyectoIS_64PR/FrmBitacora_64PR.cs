@@ -38,6 +38,9 @@ namespace ProyectoIS_64PR
             dgvEventos.MultiSelect = false;
             lst = bita.ListarEventos();
             dgvEventos.DataSource = lst;
+            dgvEventos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvEventos.BackgroundColor = SystemColors.Menu;
+            dgvEventos.BorderStyle = BorderStyle.None;
 
             GestorIdioma_64PR.GetInstance.Suscribir(this); ///observer del cambio de idioma
 
@@ -90,7 +93,7 @@ namespace ProyectoIS_64PR
         {
             if (dtpInicio.Value.Date > dtpFin.Value.Date)
             {
-                MessageBox.Show("La fecha de inicio no puede ser posterior a la fecha de fin.");
+                MessageBox.Show(textos["fechas_filtros"]);
                 return;
             }
             IEnumerable<Evento_64PR> resultado = lst;
@@ -200,13 +203,13 @@ namespace ProyectoIS_64PR
         {
             if (dgvEventos.Rows.Count == 0)
             {
-                MessageBox.Show("No hay datos para imprimir.", "Aviso",
+                MessageBox.Show(textos["no_datos"], textos["aviso"],
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             PrintDocument printDoc = new PrintDocument();
-            printDoc.DefaultPageSettings.Landscape = true; // o Portrait si entra bien
+            printDoc.DefaultPageSettings.Landscape = true; /// o Portrait si entra bien
             printDoc.PrintPage += PrintDoc_PrintPage;
 
             PrintPreviewDialog preview = new PrintPreviewDialog();
@@ -225,12 +228,12 @@ namespace ProyectoIS_64PR
             float y = e.MarginBounds.Top;
             float rowH = fontData.GetHeight(g) + 4;
 
-            // Calcular ancho de cada columna proporcional al espacio disponible
+            /// Calcular ancho de cada columna proporcional al espacio disponible
             int visibleCols = dgvEventos.Columns.Cast<DataGridViewColumn>()
                                   .Count(c => c.Visible);
             float colW = e.MarginBounds.Width / (float)visibleCols;
 
-            // Encabezados
+            /// Encabezados
             foreach (DataGridViewColumn col in dgvEventos.Columns)
             {
                 if (!col.Visible) continue;
@@ -240,11 +243,11 @@ namespace ProyectoIS_64PR
 
             y += rowH;
 
-            // Línea separadora
+            /// Línea separadora
             g.DrawLine(Pens.Black, e.MarginBounds.Left, y, e.MarginBounds.Right, y);
             y += 4;
 
-            // Filas
+            /// Filas
             foreach (DataGridViewRow row in dgvEventos.Rows)
             {
                 if (row.IsNewRow) continue;
@@ -260,7 +263,7 @@ namespace ProyectoIS_64PR
 
                 y += rowH;
 
-                // Si se va de página (para implementación básica, corta ahí)
+                /// Si se va de página (para implementación básica, corta ahí)
                 if (y > e.MarginBounds.Bottom)
                     break;
             }
@@ -283,6 +286,18 @@ namespace ProyectoIS_64PR
             btnLimpiar.Text = textos["btn_Limpiar"];
             btnAplicar.Text = textos["btn_Aplicar"];
             btnImprimir.Text = textos["btn_Imprimir"];
+
+            dgvEventos.Columns["Login"].HeaderText = textos["lbl_Login"];
+            dgvEventos.Columns["FechaHora"].HeaderText = textos["Fecha_y_hora"];
+            dgvEventos.Columns["Modulo"].HeaderText = textos["lbl_Modulo"];
+            dgvEventos.Columns["Tipo"].HeaderText = textos["lbl_Evento"];
+            dgvEventos.Columns["Criticidad"].HeaderText = textos["lbl_Criticidad"];
+
+        }
+
+        private void FrmBitacora_64PR_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
         }
     }
 }

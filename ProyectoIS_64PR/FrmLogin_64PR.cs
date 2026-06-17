@@ -172,79 +172,11 @@ namespace ProyectoIS_64PR
                 string msgIncorrecta = textos.ContainsKey("msg_contrasenaIncorrecta") ? textos["msg_contrasenaIncorrecta"] : "Contraseña incorrecta.";
                 MessageBox.Show(msgIncorrecta);
             }
+        }
 
-
-            /*if (string.IsNullOrEmpty(txtContra.Text.Trim()) || string.IsNullOrEmpty(txtLogin.Text.Trim()))
-            {
-                MessageBox.Show("Completá todos los campos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (SessionManager.GetInstance.Usuario != null)
-            {
-                MessageBox.Show("Ya hay una sesion activa");
-                return;
-            }
-
-            if (!gusuarios.ExisteUsuario(txtLogin.Text.Trim()))
-            {
-                MessageBox.Show("Usuario no encontrado.");
-                return;
-            }
-
-            if (gusuarios.BloqueadoInactivo(txtLogin.Text.Trim()))
-            {
-                MessageBox.Show("El usuario se encuentra bloqueado o inactivo");
-                return;
-            }
-
-            if (gusuarios.VerificarClave(txtLogin.Text.Trim(), txtContra.Text.Trim()))
-            {
-                gusuarios.ReiniciarIntentos(txtLogin.Text.Trim());
-                Servicios_64PR.Usuario u = gusuarios.ObtenerUsuario(txtLogin.Text.Trim());
-                SessionManager.GetInstance.Login(u);
-                BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1","1",5);
-                bita2.RegistrarEvento(ev2);
-                if (SessionManager.GetInstance.Usuario.PrimeraVez)
-                {
-                    MessageBox.Show(
-                        "Su contraseña es temporal. Debe cambiarla antes de continuar.",
-                        "Cambio de Contraseña Requerido",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    using (var fcc = new FrmCambiarClave_64PR())
-                    {
-                        if (fcc.ShowDialog() != DialogResult.OK)
-                        {
-                            SessionManager.GetInstance.Logout();
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    FrmMenu f = new FrmMenu();
-                    f.Show();
-                    this.Close();
-                    return;
-                }
-            }
-            else
-            {
-                gusuarios.SumarIntento(txtLogin.Text.Trim());
-                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "3", 4);
-                bita.RegistrarEvento(ev);
-                string temp = gusuarios.ObtenerIntentos(txtLogin.Text.Trim());
-                lblMensaje.Text = "Intento " + temp + "/3";
-                if (Convert.ToInt16(temp) == 3)
-                {
-                    ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "4", 3);
-                    bita.RegistrarEvento(ev);
-                }
-                MessageBox.Show("Contraseña incorrecta");
-            }*/
+        private void FrmLogin_64PR_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
         }
     }
 }

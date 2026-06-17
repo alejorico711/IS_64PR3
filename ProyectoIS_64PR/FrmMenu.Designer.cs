@@ -38,6 +38,7 @@
             this.gestionarUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eventosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gestionarPermisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gestionarRolesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,13 +49,13 @@
             this.configuracionToolStripMenuItem,
             this.gestionarUsuariosToolStripMenuItem,
             this.eventosToolStripMenuItem,
-            this.gestionarPermisosToolStripMenuItem});
+            this.gestionarPermisosToolStripMenuItem,
+            this.gestionarRolesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1112, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1373, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
-//            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // configuracionToolStripMenuItem
             // 
@@ -123,17 +124,25 @@
             this.gestionarPermisosToolStripMenuItem.Text = "Gestionar permisos";
             this.gestionarPermisosToolStripMenuItem.Click += new System.EventHandler(this.gestionarPermisosToolStripMenuItem_Click);
             // 
+            // gestionarRolesToolStripMenuItem
+            // 
+            this.gestionarRolesToolStripMenuItem.Name = "gestionarRolesToolStripMenuItem";
+            this.gestionarRolesToolStripMenuItem.Size = new System.Drawing.Size(122, 24);
+            this.gestionarRolesToolStripMenuItem.Text = "Gestionar roles";
+            this.gestionarRolesToolStripMenuItem.Click += new System.EventHandler(this.gestionarRolesToolStripMenuItem_Click);
+            // 
             // FrmMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1112, 450);
+            this.ClientSize = new System.Drawing.Size(1373, 563);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmMenu";
             this.Text = "FrmMenu";
-//            this.Load += new System.EventHandler(this.FrmMenu_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMenu_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMenu_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -153,5 +162,6 @@
         private System.Windows.Forms.ToolStripMenuItem idiomaToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem gestionarRolesToolStripMenuItem;
     }
 }
