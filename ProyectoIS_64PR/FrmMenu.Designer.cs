@@ -48,9 +48,9 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configuracionToolStripMenuItem,
             this.gestionarUsuariosToolStripMenuItem,
-            this.eventosToolStripMenuItem,
             this.gestionarPermisosToolStripMenuItem,
-            this.gestionarRolesToolStripMenuItem});
+            this.gestionarRolesToolStripMenuItem,
+            this.eventosToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1373, 28);
@@ -143,6 +143,7 @@
             this.Text = "FrmMenu";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMenu_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMenu_FormClosed);
+            this.Load += new System.EventHandler(this.FrmMenu_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

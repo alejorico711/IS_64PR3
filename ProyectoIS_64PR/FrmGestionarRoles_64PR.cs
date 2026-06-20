@@ -25,7 +25,15 @@ namespace ProyectoIS_64PR
             InitializeComponent();
             CargaNodos();
             CargaRoles();
-            rbCrear.Checked = true;
+
+            btnEliminar.Hide();
+            btnAgregar.Hide();
+            btnQuitar.Hide();
+            btnAplicar.Hide();
+            label1.Visible = false;
+            txtNombre.Visible = false;
+            treeView2.Visible = false;
+
             GestorIdioma_64PR.GetInstance.Suscribir(this); ///observer del cambio de idioma
              ///Aplico el idioma que ya está cargado
             textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
@@ -75,6 +83,9 @@ namespace ProyectoIS_64PR
             btnQuitar.Show();
             btnAplicar.Show();
             idRolEnEdicion = -1;
+            label1.Visible = true;
+            txtNombre.Visible = true;
+            treeView2.Visible = true;
         }
 
         private void rbModificar_CheckedChanged(object sender, EventArgs e)
@@ -90,6 +101,9 @@ namespace ProyectoIS_64PR
             btnQuitar.Show();
             btnAplicar.Show();
             idRolEnEdicion = -1;
+            label1.Visible = true;
+            txtNombre.Visible = true;
+            treeView2.Visible = true;
         }
 
         private void rbEliminar_CheckedChanged(object sender, EventArgs e)
@@ -104,6 +118,9 @@ namespace ProyectoIS_64PR
             btnAgregar.Hide();
             btnQuitar.Hide();
             btnAplicar.Hide();
+            label1.Visible = false;
+            txtNombre.Visible = false;
+            treeView2.Visible = false;
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -118,6 +135,14 @@ namespace ProyectoIS_64PR
 
             if (modoActual == Modo.Modificar)
             {
+                if (rolCompleto.Id == 2) ///El id 2 es del administrador, y esto sera siempre asi ya que este no se puede eliminar
+                {
+                    MessageBox.Show(textos["admin_no_modificar"]);
+                    treeView2.Nodes.Clear();
+                    nodos2.Clear();
+                    txtNombre.Text = string.Empty;
+                    return;
+                }
                 idRolEnEdicion = rolCompleto.Id;
                 txtNombre.Text = rolCompleto.Nombre;
                 treeView2.Nodes.Clear();
@@ -297,6 +322,19 @@ namespace ProyectoIS_64PR
         private void FrmGestionarRoles_64PR_FormClosed(object sender, FormClosedEventArgs e)
         {
             GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
+        }
+
+        private void FrmGestionarRoles_64PR_Load(object sender, EventArgs e)
+        {
+            ConfigurarPermisos();
+        }
+        private void ConfigurarPermisos()
+        {
+            Servicios_64PR.Rol_64PR rolUsuario = Servicios_64PR.SessionManager.GetInstance.Usuario.Rol;
+
+            rbCrear.Visible = rolUsuario.TienePermiso(Patentes_64PR.CrearRoles);
+            rbModificar.Visible = rolUsuario.TienePermiso(Patentes_64PR.ModificarRoles);
+            rbEliminar.Visible = rolUsuario.TienePermiso(Patentes_64PR.EliminarRoles);
         }
     }
 }

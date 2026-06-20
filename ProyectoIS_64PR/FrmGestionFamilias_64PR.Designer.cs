@@ -168,6 +168,7 @@
             this.Name = "FrmGestionFamilias_64PR";
             this.Text = "FrmGestionFamilias_64PR";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmGestionFamilias_64PR_FormClosed);
+            this.Load += new System.EventHandler(this.FrmGestionFamilias_64PR_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

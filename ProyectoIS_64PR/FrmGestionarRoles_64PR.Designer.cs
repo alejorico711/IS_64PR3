@@ -201,6 +201,7 @@
             this.Name = "FrmGestionarRoles_64PR";
             this.Text = "FrmGestionarRoles_64PR";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmGestionarRoles_64PR_FormClosed);
+            this.Load += new System.EventHandler(this.FrmGestionarRoles_64PR_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

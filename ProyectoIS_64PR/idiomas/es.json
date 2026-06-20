@@ -118,5 +118,6 @@
   "solo_eliminar_familias": "Solo podés eliminar familias.",
   "pregunta_eliminacion_familias": "¿Seguro que querés eliminar la familia",
   "roles": "Roles",
-  "patentes_y_familias": "Patentes y familias"
+  "patentes_y_familias": "Patentes y familias",
+  "admin_no_modificar" : "No se pueden modificar los permisos del administrador"
 }

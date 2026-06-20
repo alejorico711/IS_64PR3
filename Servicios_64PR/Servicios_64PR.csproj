@@ -47,6 +47,7 @@
     <Compile Include="Familia_64PR.cs" />
     <Compile Include="GestorIdioma_64PR.cs" />
     <Compile Include="IObservadorIdioma_64PR.cs" />
+    <Compile Include="Patentes_64PR.cs" />
     <Compile Include="Permiso_64PR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rol_64PR.cs" />

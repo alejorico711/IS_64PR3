@@ -379,18 +379,27 @@ namespace ProyectoIS_64PR
 
         private void FrmGestionarUsuarios_64PR_Load(object sender, EventArgs e)
         {
-            
+            ConfigurarPermisos();
+        }
+        private void ConfigurarPermisos()
+        {
+            Servicios_64PR.Rol_64PR rolUsuario = Servicios_64PR.SessionManager.GetInstance.Usuario.Rol;
+
+            btnCrear.Visible = rolUsuario.TienePermiso(Patentes_64PR.CrearUsuario);
+            btnModificar.Visible = rolUsuario.TienePermiso(Patentes_64PR.ModificarUsuario);
+            btnActDesact.Visible = rolUsuario.TienePermiso(Patentes_64PR.ActivarDesactivarUsuarios);
+            btnDesbloquear.Visible = rolUsuario.TienePermiso(Patentes_64PR.DesbloquearUsuario);
         }
 
-       /* private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            ///Pongo en rojo los usuarios desactivados
-            foreach (DataGridViewRow row in dgvUsuarios.Rows)
-            {
-                if (!(bool)row.Cells["Activo"].Value)
-                    row.DefaultCellStyle.BackColor = Color.LightCoral;
-            }
-        }*/
+        /* private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+         {
+             ///Pongo en rojo los usuarios desactivados
+             foreach (DataGridViewRow row in dgvUsuarios.Rows)
+             {
+                 if (!(bool)row.Cells["Activo"].Value)
+                     row.DefaultCellStyle.BackColor = Color.LightCoral;
+             }
+         }*/
 
         private void FrmGestionarUsuarios_64PR_FormClosed(object sender, FormClosedEventArgs e)
         {

@@ -26,7 +26,14 @@ namespace ProyectoIS_64PR
         {
             InitializeComponent();
             CargaPermisosYFamilias();
-            rbCrear.Checked = true;
+
+            btnEliminar.Hide();
+            btnAgregar.Hide();
+            btnQuitar.Hide();
+            btnAplicar.Hide();
+            label1.Visible = false;
+            txtNombre.Visible = false;
+            treeView2.Visible = false;
 
             GestorIdioma_64PR.GetInstance.Suscribir(this); ///observer del cambio de idioma
                                                            ///Aplico el idioma que ya está cargado
@@ -46,7 +53,7 @@ namespace ProyectoIS_64PR
             btnAplicar.Text = textos["aplicar"];
             btnEliminar.Text = textos["eliminar"];
 
-            txtNombre.Text = textos["nombre"];
+            label1.Text = textos["nombre"];
         }
 
         private void CargaPermisosYFamilias()
@@ -77,6 +84,9 @@ namespace ProyectoIS_64PR
             btnAgregar.Show();
             btnQuitar.Show();
             btnAplicar.Show();
+            label1.Visible = true;
+            txtNombre.Visible = true;
+            treeView2.Visible = true;
         }
 
         private void rbModificar_CheckedChanged(object sender, EventArgs e)
@@ -93,6 +103,9 @@ namespace ProyectoIS_64PR
             btnAgregar.Show();
             btnQuitar.Show();
             btnAplicar.Show();
+            label1.Visible = true;
+            txtNombre.Visible = true;
+            treeView2.Visible = true;
         }
 
         private void rbEliminar_CheckedChanged(object sender, EventArgs e)
@@ -108,6 +121,9 @@ namespace ProyectoIS_64PR
             btnAgregar.Hide();
             btnQuitar.Hide();
             btnAplicar.Hide();
+            label1.Visible = false;
+            txtNombre.Visible = false;
+            treeView2.Visible = false;
         }
 
 
@@ -249,7 +265,7 @@ namespace ProyectoIS_64PR
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show(textos["pregunta_eliminacion_familias"] + nodoSeleccionado.Nombre + "?",
+            DialogResult confirm = MessageBox.Show(textos["pregunta_eliminacion_familias"] +" "+ nodoSeleccionado.Nombre + "?",
                 textos["confirmar_eliminacion"],
                 MessageBoxButtons.YesNo);
 
@@ -296,6 +312,20 @@ namespace ProyectoIS_64PR
         private void FrmGestionFamilias_64PR_FormClosed(object sender, FormClosedEventArgs e)
         {
             GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
+        }
+
+        private void FrmGestionFamilias_64PR_Load(object sender, EventArgs e)
+        {
+            ConfigurarPermisos();
+        }
+
+        private void ConfigurarPermisos()
+        {
+            Servicios_64PR.Rol_64PR rolUsuario = Servicios_64PR.SessionManager.GetInstance.Usuario.Rol;
+
+            rbCrear.Visible = rolUsuario.TienePermiso(Patentes_64PR.CrearFamilias);
+            rbModificar.Visible = rolUsuario.TienePermiso(Patentes_64PR.ModificarFamilias);
+            rbEliminar.Visible = rolUsuario.TienePermiso(Patentes_64PR.EliminarFamilias);
         }
     }
 }

@@ -131,11 +131,12 @@ namespace ProyectoIS_64PR
                 Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(loginActual, "1", "5", 5);
                 bita3.RegistrarEvento(ev3);
 
-                SessionManager.GetInstance.Logout();
-
                 var fLogin = new FrmLogin_64PR();
                 fLogin.Show();
-                this.Close();
+                this.Hide();
+                ///aca lo idea seria usar el metodo .Close(), pero ese metodo me llama al metodo de abajo
+                ///que contiene el application.exit y me detiene la ejecucion del programa
+                SessionManager.GetInstance.Logout();
             }
         }
 
@@ -175,6 +176,34 @@ namespace ProyectoIS_64PR
         private void FrmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
             GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
+        }
+
+        private void FrmMenu_Load(object sender, EventArgs e)
+        {
+            ConfigurarPermisos();
+        }
+
+        private void ConfigurarPermisos()
+        {
+            Servicios_64PR.Rol_64PR rolUsuario = Servicios_64PR.SessionManager.GetInstance.Usuario.Rol;
+
+            bool puedeGestionarUsuarios = rolUsuario.TienePermiso(Patentes_64PR.CrearUsuario) ||
+                                          rolUsuario.TienePermiso(Patentes_64PR.ModificarUsuario) ||
+                                          rolUsuario.TienePermiso(Patentes_64PR.ActivarDesactivarUsuarios) ||
+                                          rolUsuario.TienePermiso(Patentes_64PR.DesbloquearUsuario);
+            gestionarUsuariosToolStripMenuItem.Visible = puedeGestionarUsuarios;
+
+            bool puedeGestionarFamilias = rolUsuario.TienePermiso(Patentes_64PR.CrearFamilias) ||
+                                          rolUsuario.TienePermiso(Patentes_64PR.EliminarFamilias) ||
+                                          rolUsuario.TienePermiso(Patentes_64PR.ModificarFamilias);
+            gestionarPermisosToolStripMenuItem.Visible = puedeGestionarFamilias;
+
+            bool puedeGestionarRoles = rolUsuario.TienePermiso(Patentes_64PR.CrearRoles) ||
+                                       rolUsuario.TienePermiso(Patentes_64PR.EliminarRoles) ||
+                                       rolUsuario.TienePermiso(Patentes_64PR.ModificarRoles);
+            gestionarRolesToolStripMenuItem.Visible = puedeGestionarRoles;
+
+            eventosToolStripMenuItem.Visible = rolUsuario.TienePermiso(Patentes_64PR.Bitacora);
         }
     }
 }

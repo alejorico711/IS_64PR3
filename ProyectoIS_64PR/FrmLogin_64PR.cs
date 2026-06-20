@@ -70,11 +70,6 @@ namespace ProyectoIS_64PR
                 lblMensaje.Text = aux[0]+":" + aux[1];
             }
         }
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            GestorIdioma_64PR.GetInstance.Desuscribir(this);
-            base.OnFormClosed(e);
-        }
         private void btnIniciarSesion_Click(object sender, EventArgs e)
         {
             var textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
