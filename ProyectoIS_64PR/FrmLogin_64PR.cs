@@ -104,10 +104,6 @@ namespace ProyectoIS_64PR
 
             if (gusuarios.VerificarClave(txtLogin.Text.Trim(), txtContra.Text.Trim()))
             {
-                ///Si la clave es correcta entra aca y lo primeo que hacemos es poner en 0 el contador de intentos
-                ///en la base de datos por si erro a la contraseña
-                gusuarios.ReiniciarIntentos(txtLogin.Text.Trim());
-
                 ///Cargo idioma del usuario desde la BD
                 string idiomaGuardado = gusuarios.ObtenerIdioma(txtLogin.Text.Trim());
                 GestorIdioma_64PR.GetInstance.SetIdioma(idiomaGuardado);
@@ -149,9 +145,10 @@ namespace ProyectoIS_64PR
                         if (esAdmin)
                         {
                             // Paso 4: abrir el GUI de reparación, pasándole qué tablas fallaron
-                            FrmReparacionDV_64PR frmReparacion = new FrmReparacionDV_64PR(tablasInconsistentes);
-                            frmReparacion.ShowDialog();
-                            this.Close();
+                            //FrmReparacionDV_64PR frmReparacion = new FrmReparacionDV_64PR(tablasInconsistentes);
+                            //frmReparacion.ShowDialog();
+                            //this.Close();
+                            FrmContenedor_64PR.Instancia.MostrarHijo(new FrmReparacionDV_64PR(tablasInconsistentes));
                             return; // no sigue al menú normal hasta que se resuelva
                         }
                         else
@@ -163,9 +160,16 @@ namespace ProyectoIS_64PR
                             return; // bloquea el acceso, no abre FrmMenu
                         }
                     }
-                    FrmMenu f = new FrmMenu();
-                    f.Show();
-                    this.Close();
+                    else
+                    {
+                        ///poner en 0 el contador de intentos en la base de datos por si erro a la contraseña
+                        ///SE HACE TAN ABAJO XQ ME RECALCULA LA TABLA DE USUARIOS, LO CUAL PODRIA CUBRIR UNA INCONSISTENCIA EN LA TABLA
+                        gusuarios.ReiniciarIntentos(txtLogin.Text.Trim());
+                        FrmContenedor_64PR.Instancia.MostrarHijo(new FrmMenu());
+                        //FrmMenu f = new FrmMenu();
+                        //f.Show();
+                        //this.Close();
+                    }
                 }
             }
             else

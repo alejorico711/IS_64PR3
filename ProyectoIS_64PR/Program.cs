@@ -16,12 +16,15 @@ namespace ProyectoIS_64PR
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new FrmContenedor_64PR());
+            /*Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
             FrmLogin_64PR formInicio = new FrmLogin_64PR();
             formInicio.Show();
 
             Application.Run();
-
+            */
             ///<summary>
             ///se cambio el Application.Run(New FrmLogin_64PR) a Application.Run() simplemente
             ///ya que necesitabamos cerrar todos los formularios y volver a abrir el de login sin que el programa

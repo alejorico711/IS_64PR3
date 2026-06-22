@@ -38,7 +38,6 @@ namespace ProyectoIS_64PR
             if (textos.ContainsKey("frmMenu_cambiarContrasena")) cambiarContraseñaToolStripMenuItem1.Text = textos["frmMenu_cambiarContrasena"];
             if (textos.ContainsKey("frmMenu_eventos")) eventosToolStripMenuItem.Text = textos["frmMenu_eventos"];
             if (textos.ContainsKey("frmMenu_cerrarSesion")) cerrarSesionToolStripMenuItem1.Text = textos["frmMenu_cerrarSesion"];
-            if (textos.ContainsKey("frmMenu_salir")) salirToolStripMenuItem1.Text = textos["frmMenu_salir"];
             if (textos.ContainsKey("frmMenu_idioma")) idiomaToolStripMenuItem1.Text = textos["frmMenu_idioma"];
             if (textos.ContainsKey("frmMenu_gestionFamilias")) gestionarPermisosToolStripMenuItem.Text = textos["frmMenu_gestionFamilias"];
             configuracionToolStripMenuItem.Text = textos["configuracion"];
@@ -65,26 +64,27 @@ namespace ProyectoIS_64PR
         }
         public void AbrirFormularioHijo(Form f)
         {
-            ///Esta funcion me permite abrir formularios hijos en el panel y cerrarlos sis se toca sobre el mismo modulo
-            if (formularioactual == null)
+            if (formularioactual != null)
             {
-                f.MdiParent = this;
-                f.Show();
-                f.Enabled = true;
-                formularioactual = f;
-                f.Dock = DockStyle.Fill;
-            }
-            else if (formularioactual.GetType() == f.GetType())
-            {
+                if (formularioactual.GetType() == f.GetType())
+                {
+                    formularioactual.Close();
+                    pnlContenidoMenu.Controls.Clear();
+                    formularioactual = null;
+                    return;
+                }
+
                 formularioactual.Close();
+                pnlContenidoMenu.Controls.Clear();
                 formularioactual = null;
             }
-            else
-            {
-                formularioactual.Close();
-                formularioactual = null;
-                AbrirFormularioHijo(f);
-            }
+
+            f.TopLevel = false;
+            f.FormBorderStyle = FormBorderStyle.None;
+            f.Dock = DockStyle.Fill;
+            pnlContenidoMenu.Controls.Add(f);
+            f.Show();
+            formularioactual = f;
         }
         private void gestionarUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -131,29 +131,14 @@ namespace ProyectoIS_64PR
                 Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(loginActual, "1", "5", 5);
                 bita3.RegistrarEvento(ev3);
 
-                var fLogin = new FrmLogin_64PR();
-                fLogin.Show();
-                this.Hide();
+                FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
+                //var fLogin = new FrmLogin_64PR();
+                //fLogin.Show();
+                //this.Hide();
                 ///aca lo idea seria usar el metodo .Close(), pero ese metodo me llama al metodo de abajo
                 ///que contiene el application.exit y me detiene la ejecucion del programa
                 SessionManager.GetInstance.Logout();
             }
-        }
-
-        private void salirToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ///Guardamos el idioma en BD
-            string loginActual = SessionManager.GetInstance.Usuario.Login;
-            string idiomaActual = GestorIdioma_64PR.GetInstance.IdiomaActual;
-            gusuarios.GuardarIdioma(loginActual, idiomaActual);
-
-            ///Registramos el evento en bitacora
-            BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
-            Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(loginActual, "1", "5", 5);
-            bita3.RegistrarEvento(ev3);
-
-            SessionManager.GetInstance.Logout();
-            Application.Exit();
         }
 
         private void gestionarRolesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -163,14 +148,7 @@ namespace ProyectoIS_64PR
 
         private void FrmMenu_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing) ///pregunta si cerro el usuario desde la "x" o haciendo alt+f4
-            {
-                /// Cancelamos el cierre inmediato de la X para manejarlo nosotros
-                e.Cancel = true;
-
-                /// Invocamos programáticamente el evento Click del menú
-                salirToolStripMenuItem1.PerformClick();
-            }
+            
         }
 
         private void FrmMenu_FormClosed(object sender, FormClosedEventArgs e)

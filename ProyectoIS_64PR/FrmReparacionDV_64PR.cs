@@ -63,9 +63,10 @@ namespace ProyectoIS_64PR
 
                 this.DialogResult = DialogResult.OK;
                 Servicios_64PR.SessionManager.GetInstance.Logout();
-                FrmLogin_64PR f = new FrmLogin_64PR();
-                f.Show();
-                this.Close();
+                FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
+                //FrmLogin_64PR f = new FrmLogin_64PR();
+                //f.Show();
+                //this.Close();
             }
             catch (Exception ex)
             {
@@ -83,9 +84,10 @@ namespace ProyectoIS_64PR
         {
             this.DialogResult = DialogResult.Cancel;
             Servicios_64PR.SessionManager.GetInstance.Logout();
-            FrmLogin_64PR f = new FrmLogin_64PR();
-            f.Show();
-            this.Close();
+            FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
+            //FrmLogin_64PR f = new FrmLogin_64PR();
+            //f.Show();
+            //this.Close();
         }
     }
 }
