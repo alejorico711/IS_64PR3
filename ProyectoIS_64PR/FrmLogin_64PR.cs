@@ -139,6 +139,30 @@ namespace ProyectoIS_64PR
                 }
                 else
                 {
+                    BLL_64PR.DV_64PR bllDV = new BLL_64PR.DV_64PR();
+                    Dictionary<string, List<string>> tablasInconsistentes = bllDV.VerificarIntegridadCompleta();
+
+                    if (tablasInconsistentes.Count > 0)
+                    {
+                        bool esAdmin = SessionManager.GetInstance.Usuario.Rol.TienePermiso("Reparar Integridad DV");
+
+                        if (esAdmin)
+                        {
+                            // Paso 4: abrir el GUI de reparación, pasándole qué tablas fallaron
+                            FrmReparacionDV_64PR frmReparacion = new FrmReparacionDV_64PR(tablasInconsistentes);
+                            frmReparacion.ShowDialog();
+                            this.Close();
+                            return; // no sigue al menú normal hasta que se resuelva
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                "Se detectó una inconsistencia en la base de datos. Contactá al administrador del sistema.",
+                                "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            SessionManager.GetInstance.Logout();
+                            return; // bloquea el acceso, no abre FrmMenu
+                        }
+                    }
                     FrmMenu f = new FrmMenu();
                     f.Show();
                     this.Close();

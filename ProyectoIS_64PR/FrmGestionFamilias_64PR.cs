@@ -288,25 +288,25 @@ namespace ProyectoIS_64PR
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (modoActual != Modo.Modificar) return;
+            //if (modoActual != Modo.Modificar) return;
 
-            Servicios_64PR.Rol_64PR nodoSeleccionado = (Servicios_64PR.Rol_64PR)e.Node.Tag;
+            //Servicios_64PR.Rol_64PR nodoSeleccionado = (Servicios_64PR.Rol_64PR)e.Node.Tag;
 
-            /// aca si es una patente, no tocamos nada, el usuario la va a agregar con btnAgregar
-            if (nodoSeleccionado is Servicios_64PR.Permiso_64PR) return;
+            ///// aca si es una patente, no tocamos nada, el usuario la va a agregar con btnAgregar
+            //if (nodoSeleccionado is Servicios_64PR.Permiso_64PR) return;
 
-            /// pero si es una familia, la cargamos para editar
-            idFamiliaEnEdicion = nodoSeleccionado.Id;
-            txtNombre.Text = nodoSeleccionado.Nombre;
-            treeView2.Nodes.Clear();
-            nodos2.Clear();
+            ///// pero si es una familia, la cargamos para editar
+            //idFamiliaEnEdicion = nodoSeleccionado.Id;
+            //txtNombre.Text = nodoSeleccionado.Nombre;
+            //treeView2.Nodes.Clear();
+            //nodos2.Clear();
 
-            foreach (var hijo in nodoSeleccionado.Hijos)
-            {
-                nodos2.Add(hijo);
-                treeView2.Nodes.Add(CrearNodoVisual(hijo));
-            }
-            treeView2.ExpandAll();
+            //foreach (var hijo in nodoSeleccionado.Hijos)
+            //{
+            //    nodos2.Add(hijo);
+            //    treeView2.Nodes.Add(CrearNodoVisual(hijo));
+            //}
+            //treeView2.ExpandAll();
         }
 
         private void FrmGestionFamilias_64PR_FormClosed(object sender, FormClosedEventArgs e)
@@ -326,6 +326,29 @@ namespace ProyectoIS_64PR
             rbCrear.Visible = rolUsuario.TienePermiso(Patentes_64PR.CrearFamilias);
             rbModificar.Visible = rolUsuario.TienePermiso(Patentes_64PR.ModificarFamilias);
             rbEliminar.Visible = rolUsuario.TienePermiso(Patentes_64PR.EliminarFamilias);
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (modoActual != Modo.Modificar) return;
+
+            Servicios_64PR.Rol_64PR nodoSeleccionado = (Servicios_64PR.Rol_64PR)e.Node.Tag;
+
+            /// aca si es una patente, no tocamos nada, el usuario la va a agregar con btnAgregar
+            if (nodoSeleccionado is Servicios_64PR.Permiso_64PR) return;
+
+            /// pero si es una familia, la cargamos para editar
+            idFamiliaEnEdicion = nodoSeleccionado.Id;
+            txtNombre.Text = nodoSeleccionado.Nombre;
+            treeView2.Nodes.Clear();
+            nodos2.Clear();
+
+            foreach (var hijo in nodoSeleccionado.Hijos)
+            {
+                nodos2.Add(hijo);
+                treeView2.Nodes.Add(CrearNodoVisual(hijo));
+            }
+            treeView2.ExpandAll();
         }
     }
 }

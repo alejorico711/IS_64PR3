@@ -14,9 +14,11 @@ namespace BLL_64PR
     public class Usuario
     {
         DAL_64PR.mpp_usuario mpp = new DAL_64PR.mpp_usuario();
+        private static readonly DV_64PR recalculador = new DV_64PR();
         public void Actdesact(Servicios_64PR.Usuario u)
         {
             mpp.Actdesact(u);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public bool BloqueadoInactivo(string login)
@@ -27,11 +29,13 @@ namespace BLL_64PR
         public void Crear(Servicios_64PR.Usuario u)
         {
             mpp.Crear(u);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public void Desbloquear(Servicios_64PR.Usuario u)
         {
             mpp.Desbloquear(u);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public List<Servicios_64PR.Usuario> Listar()
@@ -42,6 +46,7 @@ namespace BLL_64PR
         public void Modificar(Servicios_64PR.Usuario u)
         {
             mpp.Modificar(u);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public bool VerificarClave(string login, string contra)
@@ -57,6 +62,7 @@ namespace BLL_64PR
         public void SumarIntento(string login)
         {
             mpp.SumarIntento(login);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public bool ExisteUsuario(string login)
@@ -67,6 +73,7 @@ namespace BLL_64PR
         public void ReiniciarIntentos(string login)
         {
             mpp.ReiniciarIntentos(login);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public Servicios_64PR.Usuario ObtenerUsuario(string login)
@@ -76,6 +83,7 @@ namespace BLL_64PR
         public void CambiarClave(string nueva, string confirmacion)
         {
             mpp.CambiarClave(nueva, confirmacion);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
 
         public string ObtenerIntentos(string login)
@@ -90,6 +98,7 @@ namespace BLL_64PR
         public void GuardarIdioma(string login, string idioma)
         {
             mpp.GuardarIdioma(login, idioma);
+            recalculador.RecalcularTabla("USUARIO_64PR");
         }
     }
 }

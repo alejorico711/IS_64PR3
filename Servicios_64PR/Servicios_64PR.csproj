@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DVH_64PR.cs" />
+    <Compile Include="DV_64PR.cs" />
     <Compile Include="Encriptación.cs" />
     <Compile Include="Evento_64PR.cs" />
     <Compile Include="Familia_64PR.cs" />
