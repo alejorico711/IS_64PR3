@@ -26,7 +26,7 @@ namespace ProyectoIS_64PR
             if (textos.Count > 0)
                 ActualizarIdioma(textos);
 
-            ///Agrego el selector de idioma al menú en tiempo de ejecución
+            ///Agrego el selector de idioma al menú en tiempo de ejecución para que cargue todos los idiomas
             AgregarSelectorIdioma();
             
         }
@@ -113,6 +113,10 @@ namespace ProyectoIS_64PR
 
         private void cerrarSesionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (formularioactual != null)
+            {
+                formularioactual.Close();
+            }
             var textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
             string msg = textos.ContainsKey("msg_cerrarSesion") ? textos["msg_cerrarSesion"] : "¿Está seguro de que desea cerrar la sesión?";
             string titulo = textos.ContainsKey("msg_cerrarSesion_titulo") ? textos["msg_cerrarSesion_titulo"] : "Cerrar Sesión";
@@ -132,9 +136,6 @@ namespace ProyectoIS_64PR
                 bita3.RegistrarEvento(ev3);
 
                 FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
-                //var fLogin = new FrmLogin_64PR();
-                //fLogin.Show();
-                //this.Hide();
                 ///aca lo idea seria usar el metodo .Close(), pero ese metodo me llama al metodo de abajo
                 ///que contiene el application.exit y me detiene la ejecucion del programa
                 SessionManager.GetInstance.Logout();
@@ -145,22 +146,14 @@ namespace ProyectoIS_64PR
         {
             AbrirFormularioHijo(new FrmGestionarRoles_64PR());
         }
-
-        private void FrmMenu_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            
-        }
-
         private void FrmMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
             GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma
         }
-
         private void FrmMenu_Load(object sender, EventArgs e)
         {
             ConfigurarPermisos();
         }
-
         private void ConfigurarPermisos()
         {
             Servicios_64PR.Rol_64PR rolUsuario = Servicios_64PR.SessionManager.GetInstance.Usuario.Rol;
@@ -182,6 +175,10 @@ namespace ProyectoIS_64PR
             gestionarRolesToolStripMenuItem.Visible = puedeGestionarRoles;
 
             eventosToolStripMenuItem.Visible = rolUsuario.TienePermiso(Patentes_64PR.Bitacora);
+
+            cambiarContraseñaToolStripMenuItem1.Visible = rolUsuario.TienePermiso(Patentes_64PR.CambiarContra);
+
+            idiomaToolStripMenuItem1.Visible = rolUsuario.TienePermiso(Patentes_64PR.CambiarIdioma);
         }
     }
 }

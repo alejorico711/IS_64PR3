@@ -224,7 +224,7 @@ namespace DAL_64PR
             if (tabla != null && tabla.Rows.Count > 0)
                 return tabla.Rows[0]["Idioma"].ToString();
 
-            return "es"; // valor por defecto si no hay dato
+            return "es"; /// valor por defecto si no hay dato
         }
 
         public void GuardarIdioma(string login, string idioma)

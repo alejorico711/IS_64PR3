@@ -297,9 +297,9 @@ namespace ProyectoIS_64PR
             ///Linea que me cambia el estado del usuario
             gusuarios.Actdesact(u);
 
-            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", u.Activo == true ? "9" : "10", 4);
+            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8" , 4);
              bita.RegistrarEvento(ev);
-            MessageBox.Show(textos["operacion_exitosa"]);
+            MessageBox.Show(textos["operacion exitosa"]);
             CargaData();
         }
 
@@ -326,15 +326,6 @@ namespace ProyectoIS_64PR
                 }
             }
         }
-
-        private void dgvUsuarios_SelectionChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void dgvUsuarios_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-        }
-
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             ///Activos
@@ -390,17 +381,6 @@ namespace ProyectoIS_64PR
             btnActDesact.Visible = rolUsuario.TienePermiso(Patentes_64PR.ActivarDesactivarUsuarios);
             btnDesbloquear.Visible = rolUsuario.TienePermiso(Patentes_64PR.DesbloquearUsuario);
         }
-
-        /* private void dgvUsuarios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-         {
-             ///Pongo en rojo los usuarios desactivados
-             foreach (DataGridViewRow row in dgvUsuarios.Rows)
-             {
-                 if (!(bool)row.Cells["Activo"].Value)
-                     row.DefaultCellStyle.BackColor = Color.LightCoral;
-             }
-         }*/
-
         private void FrmGestionarUsuarios_64PR_FormClosed(object sender, FormClosedEventArgs e)
         {
             GestorIdioma_64PR.GetInstance.Desuscribir(this); ///observer del cambio de idioma

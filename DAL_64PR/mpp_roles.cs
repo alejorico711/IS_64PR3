@@ -125,14 +125,12 @@ namespace DAL_64PR
                 Servicios_64PR.Familia_64PR f = new Servicios_64PR.Familia_64PR();
                 f.Id = Convert.ToInt32(dr["ID_Familia"]);
                 f.Nombre = dr["Nombre"].ToString();
-                CargarHijosFamilia(f); // el método que ya migraste
+                CargarHijosFamilia(f);
                 lista.Add(f);
             }
 
-            /// Después las Patentes que no pertenecen a ninguna familia, esto se hace con la intencion de que una patente aparezca duplicada
-            query = @"SELECT P.ID_Patente, P.Nombre 
-              FROM Patente_64PR P
-              WHERE P.ID_Patente NOT IN (SELECT ID_Patente FROM PatenteFamilia_64PR)";
+            /// Después las Patentes
+            query = @"SELECT P.ID_Patente, P.Nombre FROM Patente_64PR P";
             tabla = DAL_64PR.Acceso.Instancia.leerQuery(query, null);
 
             foreach (DataRow dr in tabla.Rows)
@@ -208,7 +206,7 @@ namespace DAL_64PR
 
         public void ModificarFamilia(int id, string nombre, List<Rol_64PR> hijos)
         {
-            // 1. Actualizar el nombre
+            /// 1. Actualizar el nombre
             DAL_64PR.Acceso.Instancia.escribirQuery(
                 "UPDATE Familia_64PR SET Nombre = @Nombre WHERE ID_Familia = @Id",
                 new SqlParameter[]
@@ -217,7 +215,7 @@ namespace DAL_64PR
             new SqlParameter("@Id", id)
                 });
 
-            // 2. Borrar relaciones anteriores
+            /// 2. Borrar relaciones anteriores
             SqlParameter[] parametros = new SqlParameter[]
             {
         new SqlParameter("@IdFamilia", id)
@@ -231,7 +229,7 @@ namespace DAL_64PR
                 "DELETE FROM PatenteFamilia_64PR WHERE ID_Familia = @IdFamilia",
                 parametros);
 
-            // 3. Insertar las nuevas relaciones
+            /// 3. Insertar las nuevas relaciones
             foreach (var hijo in hijos)
             {
                 if (hijo is Servicios_64PR.Familia_64PR)

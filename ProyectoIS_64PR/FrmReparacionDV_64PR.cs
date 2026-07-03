@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Servicios_64PR;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,17 +11,40 @@ using System.Windows.Forms;
 
 namespace ProyectoIS_64PR
 {
-    public partial class FrmReparacionDV_64PR : Form
+    public partial class FrmReparacionDV_64PR : Form, IObservadorIdioma_64PR
     {
         private Dictionary<string, List<string>> _tablasInconsistentes;
 
         public FrmReparacionDV_64PR(Dictionary<string, List<string>> tablasInconsistentes)
         {
             InitializeComponent();
+
+            GestorIdioma_64PR.GetInstance.Suscribir(this);
+
+            CargarComboIdiomas();
+            ///Aplico idioma actual al abrir
+            var textos = GestorIdioma_64PR.GetInstance.ObtenerTextos();
+            if (textos.Count > 0)
+                ActualizarIdioma(textos);
+
             _tablasInconsistentes = tablasInconsistentes;
             textBox1.ReadOnly = true;
-            textBox1.Text= $"Se detecto una inconsistencia en la base de datos, lo que podria comprometer la integridad de los datos. {Environment.NewLine} Le solicitamos que seleccione la opcion que quiere realizar a continuacion {Environment.NewLine} Salir: Sale del programa sin tomar ninguna accion al respecto {Environment.NewLine} Restore: Selecciona un respaldo de la base de datos para restaurar a ese estaso {Environment.NewLine} Recalcular: Acepta los cambios realizados en la base de datos e ingresa al sistema, asumiendo el riesgo sobre la integridad de los datos";
             CargarTreeView();
+        }
+        private void CargarComboIdiomas()
+        {
+            cmbIdioma.Items.Clear();
+
+            foreach (string codigo in GestorIdioma_64PR.GetInstance.IdiomasDisponibles())
+                cmbIdioma.Items.Add(codigo.ToUpper()); /// "ES", "EN"
+
+            ///Seleccionar el idioma actual
+            string actual = GestorIdioma_64PR.GetInstance.IdiomaActual.ToUpper();
+            int index = cmbIdioma.Items.IndexOf(actual);
+            if (index >= 0)
+                cmbIdioma.SelectedIndex = index;
+
+            cmbIdioma.DropDownStyle = ComboBoxStyle.DropDownList;
         }
         private void CargarTreeView()
         {
@@ -28,11 +52,11 @@ namespace ProyectoIS_64PR
 
             foreach (var entrada in _tablasInconsistentes)
             {
-                // Nodo padre = nombre de la tabla
+                /// Nodo padre = nombre de la tabla
                 TreeNode nodoTabla = new TreeNode($"{entrada.Key}  ({entrada.Value.Count})");
                 nodoTabla.ForeColor = System.Drawing.Color.DarkRed;
 
-                // Nodos hijo = cada IdFila inconsistente
+                /// Nodos hijo = cada IdFila inconsistente
                 foreach (string idFila in entrada.Value)
                 {
                     TreeNode nodoFila = new TreeNode($"ID: {idFila}");
@@ -64,9 +88,6 @@ namespace ProyectoIS_64PR
                 this.DialogResult = DialogResult.OK;
                 Servicios_64PR.SessionManager.GetInstance.Logout();
                 FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
-                //FrmLogin_64PR f = new FrmLogin_64PR();
-                //f.Show();
-                //this.Close();
             }
             catch (Exception ex)
             {
@@ -85,9 +106,23 @@ namespace ProyectoIS_64PR
             this.DialogResult = DialogResult.Cancel;
             Servicios_64PR.SessionManager.GetInstance.Logout();
             FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
-            //FrmLogin_64PR f = new FrmLogin_64PR();
-            //f.Show();
-            //this.Close();
+        }
+
+        public void ActualizarIdioma(Dictionary<string, string> textos)
+        {
+            btnSalir.Text = textos["frmMenu_salir"];
+            btnRestore.Text = textos["restaurar"];
+            btnRecalcular.Text = textos["recalcular"];
+            textBox1.Text = textos["msg_inconsistencia"];
+        }
+
+        private void cmbIdioma_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbIdioma.SelectedItem == null) return;
+
+            string seleccionado = cmbIdioma.SelectedItem.ToString().ToLower(); ///"es" o "en"
+            GestorIdioma_64PR.GetInstance.SetIdioma(seleccionado);
+            ///El Observer se encarga de actualizar el formulario automáticamente
         }
     }
 }

@@ -117,7 +117,11 @@
   "seleccionar_familia": "Seleccioná una familia del panel izquierdo para modificar.",
   "solo_eliminar_familias": "Solo podés eliminar familias.",
   "pregunta_eliminacion_familias": "¿Seguro que querés eliminar la familia",
+  "continuacion_pregunta": "Esto implica que se remueva de todas las familias/roles que la utilicen",
   "roles": "Roles",
   "patentes_y_familias": "Patentes y familias",
-  "admin_no_modificar" : "No se pueden modificar los permisos del administrador"
+  "admin_no_modificar": "No se pueden modificar los permisos del administrador",
+  "restaurar": "Restaurar",
+  "recalcular": "Recalcular",
+  "msg_inconsistencia": "Se detecto una inconsistencia en la base de datos, lo que podria comprometer la integridad de los datos. Le solicitamos que seleccione la opcion que quiere realizar a continuacion, Salir: Sale del programa sin tomar ninguna accion al respecto, Restore: Selecciona un respaldo de la base de datos para restaurar a ese estado, Recalcular: Acepta los cambios realizados en la base de datos e ingresa al sistema, asumiendo el riesgo sobre la integridad de los datos"
 }

@@ -8,7 +8,7 @@ namespace Servicios_64PR
 {
     public static class Patentes_64PR
     {
-        ///esta clase contiene unicamente los "identificadores" para las patentes
+        ///esta clase contiene unicamente los "identificadores" para las patentes (se utilizo el nombre patente y no permiso, para diferenciarlas aunque sean sinonimos)
         ///se hace con el objetivo de no usar strings en crudo, y si en la base de datos se modifica una patente, esa
         ///patente se cambie una sola vez aqui. Cabe resaltar que el valor de la constante debe coincidir EXACTAMENTE con la BD
 
@@ -23,5 +23,7 @@ namespace Servicios_64PR
         public const string CrearFamilias = "Crear familias";
         public const string ModificarFamilias = "Modificar familias";
         public const string EliminarFamilias = "Eliminar familias";
+        public const string CambiarContra = "Cambiar clave";
+        public const string CambiarIdioma = "Cambiar idioma";
     }
 }

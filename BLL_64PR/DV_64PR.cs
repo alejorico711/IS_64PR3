@@ -23,28 +23,6 @@ namespace BLL_64PR
 
         DAL_64PR.mpp_DV mpp = new DAL_64PR.mpp_DV();
 
-        /*
-        ESTA LOGICA QUEDO VIEJA, NO LO ELIMINO POR LAS DUDAS, PERO LO Q ME HACIA ERA RECALCULAR EL DVH SE LA FILA AGREGADA/MODIFICADA/ELIMINADA
-        PERO AHORA LO QUE HAGO ES RECALCULAR TODA LA TABLA, AUNQUE TODOS LOS DEMAS SIGAN IGUAL, TAL VEZ SEA MENOS EFICIENTE, PERO MAS SIMPLE
-        /// Se llama después de cada INSERT/UPDATE sobre cualquier tabla del sistema
-        public void ActualizarDVHFila(string nombreTabla, string[] columnasPK, Dictionary<string, object> pkValores)
-        {
-            mpp.ActualizarDVHFila(nombreTabla, columnasPK, pkValores);
-        }
-
-        /// Se llama después de cada DELETE
-        public void EliminarDVHFila(string nombreTabla, string idFila)
-        {
-            mpp.EliminarDVHFila(nombreTabla, idFila);
-        }
-        */
-
-        /// Recalcula el DVH de toda una tabla "al vuelo" (sin tocar lo guardado),
-        /// lo vamos a usar en el flujo de REVISIÓN para comparar contra DVH_64PR/DV_64PR
-        public List<DVH_64PR> CalcularDVHTabla(string nombreTabla, string[] columnasPK)
-        {
-            return mpp.CalcularDVHTabla(nombreTabla, columnasPK);
-        }
         /// Compara el DV recalculado contra el DV guardado para UNA tabla
         public bool VerificarTabla(string nombreTabla, string[] columnasPK)
         {

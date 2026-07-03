@@ -68,20 +68,9 @@ namespace ProyectoIS_64PR
                         MessageBox.Show(textos["msg_cambio_exitoso"], "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;
 
+                        FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
+
                         SessionManager.GetInstance.Logout();
-
-                        FrmLogin_64PR f = new FrmLogin_64PR();
-                        f.Show();
-
-                        ///Cierro todos los formularios, excepto el nuevo que acabo de abrir
-                        var formulariosAVaciar = Application.OpenForms.Cast<Form>().ToList();
-                        foreach (Form fo in formulariosAVaciar)
-                        {
-                            if (fo != f)
-                            {
-                                fo.Close();
-                            }
-                        }
                     }
                 }
                 else

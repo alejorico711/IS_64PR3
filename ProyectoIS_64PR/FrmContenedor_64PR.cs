@@ -19,26 +19,19 @@ namespace ProyectoIS_64PR
         {
             InitializeComponent();
             Instancia = this;
-            this.WindowState = FormWindowState.Maximized;
-            this.IsMdiContainer = false; // ya no lo necesitamos acá
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
+            this.WindowState = FormWindowState.Normal;
             MostrarHijo(new FrmLogin_64PR());
         }
-
         public void MostrarHijo(Form hijo)
         {
-            // Cierra el hijo anterior
+            /// Cierra el hijo anterior
             foreach (Control c in pnlContenido.Controls)
             {
                 if (c is Form f) f.Close();
             }
             pnlContenido.Controls.Clear();
 
-            // Embebe el nuevo form como control dentro del panel
+            /// Embebe el nuevo form como control dentro del panel
             hijo.TopLevel = false;
             hijo.FormBorderStyle = FormBorderStyle.None;
             hijo.Dock = DockStyle.Fill;

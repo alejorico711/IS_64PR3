@@ -144,12 +144,9 @@ namespace ProyectoIS_64PR
 
                         if (esAdmin)
                         {
-                            // Paso 4: abrir el GUI de reparación, pasándole qué tablas fallaron
-                            //FrmReparacionDV_64PR frmReparacion = new FrmReparacionDV_64PR(tablasInconsistentes);
-                            //frmReparacion.ShowDialog();
-                            //this.Close();
+                            /// abrir el GUI de reparación, pasándole qué tablas fallaron
                             FrmContenedor_64PR.Instancia.MostrarHijo(new FrmReparacionDV_64PR(tablasInconsistentes));
-                            return; // no sigue al menú normal hasta que se resuelva
+                            return; /// no sigue al menú normal hasta que se resuelva
                         }
                         else
                         {
@@ -157,7 +154,7 @@ namespace ProyectoIS_64PR
                                 "Se detectó una inconsistencia en la base de datos. Contactá al administrador del sistema.",
                                 "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             SessionManager.GetInstance.Logout();
-                            return; // bloquea el acceso, no abre FrmMenu
+                            return; /// bloquea el acceso, no abre FrmMenu
                         }
                     }
                     else
@@ -166,9 +163,6 @@ namespace ProyectoIS_64PR
                         ///SE HACE TAN ABAJO XQ ME RECALCULA LA TABLA DE USUARIOS, LO CUAL PODRIA CUBRIR UNA INCONSISTENCIA EN LA TABLA
                         gusuarios.ReiniciarIntentos(txtLogin.Text.Trim());
                         FrmContenedor_64PR.Instancia.MostrarHijo(new FrmMenu());
-                        //FrmMenu f = new FrmMenu();
-                        //f.Show();
-                        //this.Close();
                     }
                 }
             }

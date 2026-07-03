@@ -226,6 +226,11 @@ namespace ProyectoIS_64PR
                 MessageBox.Show(textos["nombre_para_rol"]);
                 return;
             }
+            if (treeView2.Nodes.Count == 0)
+            {
+                MessageBox.Show(textos["almenos_un_elemento"]);
+                return;
+            }
 
             List<Servicios_64PR.Rol_64PR> hijos = new List<Servicios_64PR.Rol_64PR>();
             foreach (TreeNode tn in treeView2.Nodes)
