@@ -197,5 +197,49 @@ namespace DAL_64PR
             }
             return resultado;
         }
+        public int EjecutarComandoSinTransaccion(string query, SqlParameter[] parametros, int timeoutSegundos = 300)
+        {
+            ///este metodo es necesario para el backup, ya que no pueden ejecutarse en una TX de usuario
+            conectar();
+            int filasAfectadas = 0;
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conexion))
+                {
+                    cmd.CommandTimeout = timeoutSegundos; /// el backup puede tardar mas que el default (30s)
+                    if (parametros != null)
+                    {
+                        foreach (SqlParameter p in parametros)
+                            cmd.Parameters.AddWithValue(p.ParameterName, p.Value);
+                    }
+                    filasAfectadas = cmd.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                desconectar();
+            }
+            return filasAfectadas;
+        }
+        public int EjecutarComandoMaster(string query, SqlParameter[] parametros, int timeoutSegundos = 300)
+        {
+            // /Conexión independiente contra 'master'
+            string connStringMaster = @"Data Source=.\SQLEXPRESS;Initial Catalog=master;Integrated Security=True;TrustServerCertificate=True";
+
+            using (SqlConnection conexionMaster = new SqlConnection(connStringMaster))
+            {
+                conexionMaster.Open();
+                using (SqlCommand cmd = new SqlCommand(query, conexionMaster))
+                {
+                    cmd.CommandTimeout = timeoutSegundos;
+                    if (parametros != null)
+                    {
+                        foreach (SqlParameter p in parametros)
+                            cmd.Parameters.AddWithValue(p.ParameterName, p.Value);
+                    }
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

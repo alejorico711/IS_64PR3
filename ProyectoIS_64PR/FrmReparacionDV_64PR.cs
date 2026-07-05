@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -98,7 +99,60 @@ namespace ProyectoIS_64PR
 
         private void btnRestore_Click(object sender, EventArgs e)
         {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Archivos de Backup (*.bak)|*.bak";
+                ofd.Title = "Seleccione el archivo de backup a restaurar";
 
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    string rutaBackup = ofd.FileName;
+
+                    var confirmacion = MessageBox.Show(
+                        "Esto va a reemplazar la base de datos actual con el backup seleccionado.\n" +
+                        "Todos los cambios no respaldados se perderán. ¿Desea continuar?",
+                        "Confirmar restauración", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                    if (confirmacion != DialogResult.Yes) return;
+
+                    try
+                    {
+                        BLL_64PR.Backup gBackup = new BLL_64PR.Backup();
+                        this.Cursor = Cursors.WaitCursor;
+
+                        /// leer los nombres lógicos del backup
+                        DataTable fileList = gBackup.ObtenerFileList(rutaBackup);
+                        string logicalData = null, logicalLog = null;
+
+                        foreach (DataRow fila in fileList.Rows)
+                        {
+                            string tipo = fila["Type"].ToString();
+                            if (tipo == "D") logicalData = fila["LogicalName"].ToString();
+                            else if (tipo == "L") logicalLog = fila["LogicalName"].ToString();
+                        }
+
+                        /// calcular dónde van a ir los archivos físicos
+                        string rutaDefaultData = gBackup.ObtenerRutaDefaultData();
+                        string rutaDestinoMdf = System.IO.Path.Combine(rutaDefaultData, "BD_64PR.mdf");
+                        string rutaDestinoLdf = System.IO.Path.Combine(rutaDefaultData, "BD_64PR_log.ldf");
+
+                        gBackup.RestaurarBackup(rutaBackup, logicalData, logicalLog, rutaDestinoMdf, rutaDestinoLdf);
+
+                        MessageBox.Show("Base de datos restaurada correctamente.\nLa aplicación se cerrará para reconectar.",
+                                        "Restauración exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Application.Restart();
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show("Ocurrió un error al restaurar el backup: " + ex.Message,
+                                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        this.Cursor = Cursors.Default;
+                    }
+                }
+            }
         }
 
         private void btnSalir_Click(object sender, EventArgs e)

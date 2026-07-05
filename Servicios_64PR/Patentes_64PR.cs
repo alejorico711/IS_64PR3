@@ -25,5 +25,7 @@ namespace Servicios_64PR
         public const string EliminarFamilias = "Eliminar familias";
         public const string CambiarContra = "Cambiar clave";
         public const string CambiarIdioma = "Cambiar idioma";
+        public const string Respaldos = "Hacer respaldos";
+        public const string Restauraciones = "Hacer restauraciones";
     }
 }
