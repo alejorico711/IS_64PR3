@@ -123,5 +123,17 @@
   "admin_no_modificar": "Administrator permissions cannot be modified",
   "restaurar": "Restore",
   "recalcular": "Recalculate",
-  "msg_inconsistencia": "An inconsistency was detected in the database, which could compromise data integrity. Please select the option you want to perform next, Exit: Exits the program without taking any action regarding this, Restore: Selects a database backup to restore to that state, Recalculate: Accepts the changes made to the database and enters the system, assuming the risk to data integrity"
+  "msg_inconsistencia": "An inconsistency was detected in the database, which could compromise data integrity. Please select the option you want to perform next, Exit: Exits the program without taking any action regarding this, Restore: Selects a database backup to restore to that state, Recalculate: Accepts the changes made to the database and enters the system, assuming the risk to data integrity",
+  "backup_Exitoso": "Backup generated successfully in",
+  "seleccionar_archivo": "Select the backup file to restore",
+  "Confirmar restauración": "Confirm restore",
+  "msg_confirmacion": "This will replace the current database with the selected backup; all unsaved changes will be lost. Do you wish to continue?",
+  "Restauración exitosa": "Restore successful",
+  "msg_restauracion": "Database restored successfully. The application will close to reconnect.",
+  "msg_inconsistencia2": "Database inconsistency detected. Please contact the system administrator.",
+  "advertencia": "This will recalculate the check digits for all tables using the current data.",
+  "Recalcular integridad": "Recalculate integrity",
+  "dvs_recalculados": "Check digits recalculated successfully.",
+  "respaldo": "Data base backup",
+  "restaurar2": "Data base restore"
 }

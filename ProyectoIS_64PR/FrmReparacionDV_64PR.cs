@@ -14,9 +14,10 @@ namespace ProyectoIS_64PR
 {
     public partial class FrmReparacionDV_64PR : Form, IObservadorIdioma_64PR
     {
-        private Dictionary<string, List<string>> _tablasInconsistentes;
+        private Dictionary<string, List<FilaInconsistente_64PR>> _tablasInconsistentes;
+        Dictionary<string, string> textos;
 
-        public FrmReparacionDV_64PR(Dictionary<string, List<string>> tablasInconsistentes)
+        public FrmReparacionDV_64PR(Dictionary<string, List<FilaInconsistente_64PR>> tablasInconsistentes)
         {
             InitializeComponent();
 
@@ -53,14 +54,36 @@ namespace ProyectoIS_64PR
 
             foreach (var entrada in _tablasInconsistentes)
             {
-                /// Nodo padre = nombre de la tabla
                 TreeNode nodoTabla = new TreeNode($"{entrada.Key}  ({entrada.Value.Count})");
-                nodoTabla.ForeColor = System.Drawing.Color.DarkRed;
+                nodoTabla.ForeColor = Color.DarkRed;
 
-                /// Nodos hijo = cada IdFila inconsistente
-                foreach (string idFila in entrada.Value)
+                foreach (FilaInconsistente_64PR fila in entrada.Value)
                 {
-                    TreeNode nodoFila = new TreeNode($"ID: {idFila}");
+                    string etiqueta;
+                    Color color;
+
+                    switch (fila.Tipo)
+                    {
+                        case TipoAnomalia_64PR.Insercion:
+                            etiqueta = "(INSERT)";
+                            color = Color.DarkGreen;
+                            break;
+                        case TipoAnomalia_64PR.Modificacion:
+                            etiqueta = "(UPDATE)";
+                            color = Color.DarkOrange;
+                            break;
+                        case TipoAnomalia_64PR.Eliminacion:
+                            etiqueta = "(DELETE)";
+                            color = Color.Firebrick;
+                            break;
+                        default:
+                            etiqueta = "";
+                            color = Color.Black;
+                            break;
+                    }
+
+                    TreeNode nodoFila = new TreeNode($"ID: {fila.IdFila}  -  {etiqueta}");
+                    nodoFila.ForeColor = color;
                     nodoTabla.Nodes.Add(nodoFila);
                 }
 
@@ -73,8 +96,8 @@ namespace ProyectoIS_64PR
         private void btnRecalcular_Click(object sender, EventArgs e)
         {
             var confirmacion = MessageBox.Show(
-                "Esto va a recalcular los dígitos verificadores de todas las tablas con los datos actuales.\n¿Confirmar?",
-                "Recalcular integridad", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                textos["advertencia"],
+                textos["Recalcular integridad"], MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (confirmacion != DialogResult.Yes) return;
 
@@ -83,16 +106,21 @@ namespace ProyectoIS_64PR
                 BLL_64PR.DV_64PR bllDV = new BLL_64PR.DV_64PR();
                 bllDV.RecalcularIntegridadCompleta();
 
-                MessageBox.Show("Dígitos verificadores recalculados correctamente.",
+                MessageBox.Show(textos["dvs_recalculados"],
                     "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.DialogResult = DialogResult.OK;
+
+                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+                bita.RegistrarEvento(ev);
+
                 Servicios_64PR.SessionManager.GetInstance.Logout();
                 FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al recalcular: " + ex.Message,
+                MessageBox.Show("Error: " + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -102,23 +130,20 @@ namespace ProyectoIS_64PR
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Archivos de Backup (*.bak)|*.bak";
-                ofd.Title = "Seleccione el archivo de backup a restaurar";
+                ofd.Title = textos["seleccionar_archivo"];
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     string rutaBackup = ofd.FileName;
 
-                    var confirmacion = MessageBox.Show(
-                        "Esto va a reemplazar la base de datos actual con el backup seleccionado.\n" +
-                        "Todos los cambios no respaldados se perderán. ¿Desea continuar?",
-                        "Confirmar restauración", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    var confirmacion = MessageBox.Show(textos["msg_confirmacion"],
+                        textos["Confirmar restauración"], MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (confirmacion != DialogResult.Yes) return;
 
                     try
                     {
                         BLL_64PR.Backup gBackup = new BLL_64PR.Backup();
-                        this.Cursor = Cursors.WaitCursor;
 
                         /// leer los nombres lógicos del backup
                         DataTable fileList = gBackup.ObtenerFileList(rutaBackup);
@@ -138,13 +163,17 @@ namespace ProyectoIS_64PR
 
                         gBackup.RestaurarBackup(rutaBackup, logicalData, logicalLog, rutaDestinoMdf, rutaDestinoLdf);
 
-                        MessageBox.Show("Base de datos restaurada correctamente.\nLa aplicación se cerrará para reconectar.",
-                                        "Restauración exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                        Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Restore).ToString(), 1);
+                        bita.RegistrarEvento(ev);
+
+                        MessageBox.Show(textos["msg_restauracion"],
+                                        textos["Restauración exitosa"], MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Application.Restart();
                     }
                     catch (SqlException ex)
                     {
-                        MessageBox.Show("Ocurrió un error al restaurar el backup: " + ex.Message,
+                        MessageBox.Show("Error: " + ex.Message,
                                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally
@@ -158,12 +187,18 @@ namespace ProyectoIS_64PR
         private void btnSalir_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+
+            BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+            Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+            bita.RegistrarEvento(ev);
+
             Servicios_64PR.SessionManager.GetInstance.Logout();
             FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
         }
 
-        public void ActualizarIdioma(Dictionary<string, string> textos)
+        public void ActualizarIdioma(Dictionary<string, string> textoss)
         {
+            textos=textoss;
             btnSalir.Text = textos["frmMenu_salir"];
             btnRestore.Text = textos["restaurar"];
             btnRecalcular.Text = textos["recalcular"];

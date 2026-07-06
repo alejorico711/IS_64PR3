@@ -61,14 +61,17 @@ namespace ProyectoIS_64PR
                         gusuario.CambiarClave(txtNueva.Text.Trim(), txtConfirmar.Text.Trim());
 
                         ///registro el evento en bitacora
-                        BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
-                        Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "2", 4);
-                        bita.RegistrarEvento(ev);
+                        BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
+                        Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.CambioClave).ToString(), 4);
+                        bita2.RegistrarEvento(ev2);
 
                         MessageBox.Show(textos["msg_cambio_exitoso"], "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.DialogResult = DialogResult.OK;
 
                         FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
+
+                        ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+                        bita2.RegistrarEvento(ev2);
 
                         SessionManager.GetInstance.Logout();
                     }

@@ -14,6 +14,7 @@ namespace ProyectoIS_64PR
     public partial class FrmGestionarRoles_64PR : Form, IObservadorIdioma_64PR
     {
         BLL_64PR.Rol_64PR bllRol = new BLL_64PR.Rol_64PR();
+        BLL_64PR.Permiso_64PR bllpermisos = new BLL_64PR.Permiso_64PR();
         List<Servicios_64PR.Rol_64PR> nodos2 = new List<Servicios_64PR.Rol_64PR>();
         Dictionary<string, string> textos;
 
@@ -43,7 +44,7 @@ namespace ProyectoIS_64PR
         private void CargaNodos()
         {
             treeView1.Nodes.Clear();
-            List<Servicios_64PR.Rol_64PR> nodos = bllRol.ObtenerTodosLosNodos();
+            List<Servicios_64PR.Rol_64PR> nodos = bllpermisos.ObtenerTodosLosNodos();
 
             foreach (var nodo in nodos)
                 treeView1.Nodes.Add(CrearNodoVisual(nodo));
@@ -241,6 +242,11 @@ namespace ProyectoIS_64PR
                 if (modoActual == Modo.Crear)
                 {
                     bllRol.CrearRol(txtNombre.Text.Trim(), hijos);
+
+                    BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                    Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionRoles).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.CreacionRol).ToString(), 4);
+                    bita.RegistrarEvento(ev);
+
                     MessageBox.Show(textos["rol_creado"]);
                 }
                 else if (modoActual == Modo.Modificar)
@@ -251,6 +257,9 @@ namespace ProyectoIS_64PR
                         return;
                     }
                     bllRol.ModificarRol(idRolEnEdicion, txtNombre.Text.Trim(), hijos);
+                    BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                    Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionRoles).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.ModificacionRol).ToString(), 4);
+                    bita.RegistrarEvento(ev);
                     MessageBox.Show(textos["rol_modificado"]);
                 }
 
@@ -313,6 +322,9 @@ namespace ProyectoIS_64PR
             try
             {
                 bllRol.EliminarRol(rolCompleto.Id, cantUsuarios > 0);
+                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionRoles).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.EliminacionRol).ToString(), 3);
+                bita.RegistrarEvento(ev);
                 MessageBox.Show(textos["rol_eliminado"]);
                 CargaRoles();
                 treeView2.Nodes.Clear();

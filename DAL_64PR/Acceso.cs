@@ -223,7 +223,7 @@ namespace DAL_64PR
         }
         public int EjecutarComandoMaster(string query, SqlParameter[] parametros, int timeoutSegundos = 300)
         {
-            // /Conexión independiente contra 'master'
+            ///Conexión independiente contra 'master'
             string connStringMaster = @"Data Source=.\SQLEXPRESS;Initial Catalog=master;Integrated Security=True;TrustServerCertificate=True";
 
             using (SqlConnection conexionMaster = new SqlConnection(connStringMaster))

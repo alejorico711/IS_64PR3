@@ -123,5 +123,17 @@
   "admin_no_modificar": "No se pueden modificar los permisos del administrador",
   "restaurar": "Restaurar",
   "recalcular": "Recalcular",
-  "msg_inconsistencia": "Se detecto una inconsistencia en la base de datos, lo que podria comprometer la integridad de los datos. Le solicitamos que seleccione la opcion que quiere realizar a continuacion, Salir: Sale del programa sin tomar ninguna accion al respecto, Restore: Selecciona un respaldo de la base de datos para restaurar a ese estado, Recalcular: Acepta los cambios realizados en la base de datos e ingresa al sistema, asumiendo el riesgo sobre la integridad de los datos"
+  "msg_inconsistencia": "Se detecto una inconsistencia en la base de datos, lo que podria comprometer la integridad de los datos. Le solicitamos que seleccione la opcion que quiere realizar a continuacion, Salir: Sale del programa sin tomar ninguna accion al respecto, Restore: Selecciona un respaldo de la base de datos para restaurar a ese estado, Recalcular: Acepta los cambios realizados en la base de datos e ingresa al sistema, asumiendo el riesgo sobre la integridad de los datos",
+  "backup_Exitoso": "Backup generado correctamente en",
+  "seleccionar_archivo": "Seleccione el archivo de backup a restaurar",
+  "Confirmar restauración": "Confirmar restauración",
+  "msg_confirmacion": "Esto va a reemplazar la base de datos actual con el backup seleccionado, todos los cambios no respaldados se perderán. ¿Desea continuar?",
+  "Restauración exitosa": "Restauración exitosa",
+  "msg_restauracion": "Base de datos restaurada correctamente. La aplicación se cerrará para reconectar.",
+  "msg_inconsistencia2": "Se detectó una inconsistencia en la base de datos. Contactá al administrador del sistema.",
+  "advertencia": "Esto va a recalcular los dígitos verificadores de todas las tablas con los datos actuales.",
+  "Recalcular integridad": "Recalcular integridad",
+  "dvs_recalculados": "Dígitos verificadores recalculados correctamente.",
+  "respaldo": "Respaldo base de datos",
+  "restaurar2": "Restaurar base de datos"
 }

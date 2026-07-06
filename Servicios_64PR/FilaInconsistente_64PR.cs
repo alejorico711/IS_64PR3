@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Servicios_64PR
 {
-    public class DV_64PR
+    public class FilaInconsistente_64PR
     {
         public string Tabla { get; set; }
-        public long Valor { get; set; }
+        public string IdFila { get; set; }
+        public TipoAnomalia_64PR Tipo { get; set; }
     }
 }

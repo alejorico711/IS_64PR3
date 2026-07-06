@@ -17,6 +17,7 @@ namespace ProyectoIS_64PR
     {
         public Form formularioactual = null;
         BLL_64PR.Usuario gusuarios = new BLL_64PR.Usuario();
+        Dictionary<string, string> textos;
         public FrmMenu()
         {
             InitializeComponent();
@@ -31,8 +32,9 @@ namespace ProyectoIS_64PR
             AgregarSelectorIdioma();
             
         }
-        public void ActualizarIdioma(Dictionary<string, string> textos)
+        public void ActualizarIdioma(Dictionary<string, string> textoss)
         {
+            textos = textoss;
             if (textos.ContainsKey("frmMenu_titulo")) this.Text = textos["frmMenu_titulo"];
             if (textos.ContainsKey("frmMenu_login")) loginToolStripMenuItem1.Text = textos["frmMenu_login"];
             if (textos.ContainsKey("frmMenu_gestionUsuarios")) gestionarUsuariosToolStripMenuItem.Text = textos["frmMenu_gestionUsuarios"];
@@ -43,6 +45,8 @@ namespace ProyectoIS_64PR
             if (textos.ContainsKey("frmMenu_gestionFamilias")) gestionarPermisosToolStripMenuItem.Text = textos["frmMenu_gestionFamilias"];
             configuracionToolStripMenuItem.Text = textos["configuracion"];
             gestionarRolesToolStripMenuItem.Text = textos["gestionar_roles"];
+            respaldoBaseDeDatosToolStripMenuItem.Text = textos["respaldo"];
+            restaurarBaseDeDatosToolStripMenuItem.Text = textos["restaurar2"];
         }
         private void AgregarSelectorIdioma()
         {
@@ -132,8 +136,9 @@ namespace ProyectoIS_64PR
                 gusuarios.GuardarIdioma(loginActual, idiomaActual);
 
                 ///Registrasmo ele vento en bitacora
+
                 BLL_64PR.Bitacora_64PR bita3 = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(loginActual, "1", "5", 5);
+                Servicios_64PR.Evento_64PR ev3 = new Evento_64PR(loginActual, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
                 bita3.RegistrarEvento(ev3);
 
                 FrmContenedor_64PR.Instancia.MostrarHijo(new FrmLogin_64PR());
@@ -200,17 +205,21 @@ namespace ProyectoIS_64PR
 
                 gBackup.GenerarBackup(rutaCompleta);
 
-                MessageBox.Show($"Backup generado correctamente en:\n{rutaCompleta}",
-                                "Backup exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Backup).ToString(), 4);
+                bita.RegistrarEvento(ev);
+
+                MessageBox.Show(textos["backup_Exitoso"] + $":\n{rutaCompleta}",
+                                "Backup", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (SqlException ex)
             {
-                MessageBox.Show("Ocurrió un error al generar el backup: " + ex.Message,
+                MessageBox.Show("Error: " + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error inesperado: " + ex.Message,
+                MessageBox.Show("Error: " + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -220,23 +229,20 @@ namespace ProyectoIS_64PR
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Archivos de Backup (*.bak)|*.bak";
-                ofd.Title = "Seleccione el archivo de backup a restaurar";
+                ofd.Title = textos["seleccionar_archivo"];
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     string rutaBackup = ofd.FileName;
 
-                    var confirmacion = MessageBox.Show(
-                        "Esto va a reemplazar la base de datos actual con el backup seleccionado.\n" +
-                        "Todos los cambios no respaldados se perderán. ¿Desea continuar?",
-                        "Confirmar restauración", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    var confirmacion = MessageBox.Show(textos["msg_confirmacion"],
+                        textos["Confirmar restauración"], MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (confirmacion != DialogResult.Yes) return;
 
                     try
                     {
                         BLL_64PR.Backup gBackup = new BLL_64PR.Backup();
-                        this.Cursor = Cursors.WaitCursor;
 
                         /// leer los nombres lógicos del backup
                         DataTable fileList = gBackup.ObtenerFileList(rutaBackup);
@@ -256,13 +262,17 @@ namespace ProyectoIS_64PR
 
                         gBackup.RestaurarBackup(rutaBackup, logicalData, logicalLog, rutaDestinoMdf, rutaDestinoLdf);
 
-                        MessageBox.Show("Base de datos restaurada correctamente.\nLa aplicación se cerrará para reconectar.",
-                                        "Restauración exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                        Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Restore).ToString(), 1);
+                        bita.RegistrarEvento(ev);
+
+                        MessageBox.Show(textos["msg_restauracion"],
+                                        textos["Restauración exitosa"], MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Application.Restart();
                     }
                     catch (SqlException ex)
                     {
-                        MessageBox.Show("Ocurrió un error al restaurar el backup: " + ex.Message,
+                        MessageBox.Show("Error: " + ex.Message,
                                         "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally

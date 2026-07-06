@@ -114,7 +114,7 @@ namespace ProyectoIS_64PR
 
                 ///Registro el evennto en bitacora
                 BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "1", "1", 5);
+                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.LoginExitoso).ToString(), 5);
                 bita2.RegistrarEvento(ev2);
 
                 if (SessionManager.GetInstance.Usuario.PrimeraVez)
@@ -128,6 +128,10 @@ namespace ProyectoIS_64PR
                     {
                         if (fcc.ShowDialog() != DialogResult.OK)
                         {
+                            BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                            Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+                            bita.RegistrarEvento(ev);
+
                             SessionManager.GetInstance.Logout();
                             return;
                         }
@@ -136,7 +140,7 @@ namespace ProyectoIS_64PR
                 else
                 {
                     BLL_64PR.DV_64PR bllDV = new BLL_64PR.DV_64PR();
-                    Dictionary<string, List<string>> tablasInconsistentes = bllDV.VerificarIntegridadCompleta();
+                    Dictionary<string, List<FilaInconsistente_64PR>> tablasInconsistentes = bllDV.VerificarIntegridadCompleta();
 
                     if (tablasInconsistentes.Count > 0)
                     {
@@ -151,8 +155,13 @@ namespace ProyectoIS_64PR
                         else
                         {
                             MessageBox.Show(
-                                "Se detectó una inconsistencia en la base de datos. Contactá al administrador del sistema.",
-                                "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                textos["msg_inconsistencia2"],
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                            Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+                            bita.RegistrarEvento(ev);
+
                             SessionManager.GetInstance.Logout();
                             return; /// bloquea el acceso, no abre FrmMenu
                         }
@@ -170,9 +179,9 @@ namespace ProyectoIS_64PR
             {
                 ///Si la contraseña no es correcta entra aca y sumamos un intento, registrandolo en bitacora
                 gusuarios.SumarIntento(txtLogin.Text.Trim());
-                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
-                Servicios_64PR.Evento_64PR ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "3", 4);
-                bita.RegistrarEvento(ev);
+                BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(txtLogin.Text, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.LoginFallido).ToString(), 4);
+                bita2.RegistrarEvento(ev2);
 
                 ///Obtenemos los intentos del usuario en base de datos y lo volcamos en el label
                 string temp = gusuarios.ObtenerIntentos(txtLogin.Text.Trim());
@@ -182,8 +191,8 @@ namespace ProyectoIS_64PR
                 if (Convert.ToInt16(temp) == 3)
                 {
                     ///Si los intentos llegan a 3 el bloqueo se hace desde la BD, aca lo que hago en registrar en la bitaora nomas
-                    ev = new Evento_64PR(txtLogin.Text.Trim(), "1", "4", 3);
-                    bita.RegistrarEvento(ev);
+                    ev2 = new Evento_64PR(txtLogin.Text, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.UsuarioBloqueado).ToString(), 5);
+                    bita2.RegistrarEvento(ev2);
                 }
 
                 string msgIncorrecta = textos.ContainsKey("msg_contrasenaIncorrecta") ? textos["msg_contrasenaIncorrecta"] : "Contraseña incorrecta.";

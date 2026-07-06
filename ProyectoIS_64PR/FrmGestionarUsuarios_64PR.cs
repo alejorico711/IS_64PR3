@@ -184,7 +184,7 @@ namespace ProyectoIS_64PR
                             gusuarios.Crear(u);
 
                             ///Registro el evento en bitacora
-                            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "6", 4);
+                            Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionUsuarios).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.AltaUsuario).ToString(), 4);
                             MessageBox.Show(textos["usuario_creado"] + u.Login);
                             bita.RegistrarEvento(ev);
 
@@ -233,7 +233,7 @@ namespace ProyectoIS_64PR
                             gusuarios.Modificar(u);
 
                             ///Registro el evento en bitacora
-                            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "7", 4);
+                            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionUsuarios).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.ModificacionUsuario).ToString(), 4);
                             MessageBox.Show(textos["usuario_modificado"]);
                             bita.RegistrarEvento(ev);
 
@@ -272,7 +272,7 @@ namespace ProyectoIS_64PR
                 gusuarios.Desbloquear(u);
 
                 ///Registro el evento en bitacora
-                ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8", 4);
+                ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionUsuarios).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.UsuarioBloqueado).ToString(), 4);
                 MessageBox.Show(textos["usuario_desbloqueado"]);
                 bita.RegistrarEvento(ev);
 
@@ -296,9 +296,8 @@ namespace ProyectoIS_64PR
 
             ///Linea que me cambia el estado del usuario
             gusuarios.Actdesact(u);
-
-            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, "2", "8" , 4);
-             bita.RegistrarEvento(ev);
+            ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionUsuarios).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.ModificacionUsuario).ToString(), 4);
+            bita.RegistrarEvento(ev);
             MessageBox.Show(textos["operacion exitosa"]);
             CargaData();
         }

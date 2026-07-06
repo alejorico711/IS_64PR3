@@ -47,8 +47,9 @@ namespace ProyectoIS_64PR
                 string idiomaActual = GestorIdioma_64PR.GetInstance.IdiomaActual;
                 new BLL_64PR.Usuario().GuardarIdioma(loginActual, idiomaActual);
 
-                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
-                bita.RegistrarEvento(new Servicios_64PR.Evento_64PR(loginActual, "1", "5", 5));
+                BLL_64PR.Bitacora_64PR bita2 = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev2 = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.Login).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.Logout).ToString(), 5);
+                bita2.RegistrarEvento(ev2);
 
                 SessionManager.GetInstance.Logout();
             }

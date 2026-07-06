@@ -44,6 +44,8 @@
     <Compile Include="Backup.cs" />
     <Compile Include="Bitacora_64PR.cs" />
     <Compile Include="DV_64PR.cs" />
+    <Compile Include="Familia_64PR.cs" />
+    <Compile Include="Permiso_64PR.cs" />
     <Compile Include="Rol_64PR.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

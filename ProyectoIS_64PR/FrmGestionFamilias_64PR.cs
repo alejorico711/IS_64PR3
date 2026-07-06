@@ -14,6 +14,8 @@ namespace ProyectoIS_64PR
     public partial class FrmGestionFamilias_64PR : Form,IObservadorIdioma_64PR
     {
         BLL_64PR.Rol_64PR bllRol = new BLL_64PR.Rol_64PR();
+        BLL_64PR.Familia_64PR bllfamilia = new BLL_64PR.Familia_64PR();
+        BLL_64PR.Permiso_64PR bllpermiso = new BLL_64PR.Permiso_64PR();
         List<Servicios_64PR.Rol_64PR> nodos = new List<Servicios_64PR.Rol_64PR>();
         List<Servicios_64PR.Rol_64PR> nodos2 = new List<Servicios_64PR.Rol_64PR>();
         Dictionary<string, string> textos;
@@ -59,7 +61,7 @@ namespace ProyectoIS_64PR
         private void CargaPermisosYFamilias()
         {
             treeView1.Nodes.Clear();
-            nodos = bllRol.ObtenerTodosLosNodos();
+            nodos = bllpermiso.ObtenerTodosLosNodos();
 
             foreach (var nodo in nodos)
             {
@@ -227,7 +229,10 @@ namespace ProyectoIS_64PR
             {
                 if (modoActual == Modo.Crear)
                 {
-                    bllRol.CrearFamilia(txtNombre.Text.Trim(), hijos);
+                    bllfamilia.CrearFamilia(txtNombre.Text.Trim(), hijos);
+                    BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                    Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionFamilias).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.CreacionFamilia).ToString(), 4);
+                    bita.RegistrarEvento(ev);
                     MessageBox.Show(textos["familia_creada"]);
                 }
                 else if (modoActual == Modo.Modificar)
@@ -237,7 +242,10 @@ namespace ProyectoIS_64PR
                         MessageBox.Show(textos["seleccionar_familia"]);
                         return;
                     }
-                    bllRol.ModificarFamilia(idFamiliaEnEdicion, txtNombre.Text.Trim(), hijos);
+                    bllfamilia.ModificarFamilia(idFamiliaEnEdicion, txtNombre.Text.Trim(), hijos);
+                    BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                    Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionFamilias).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.ModificacionFamilia).ToString(), 4);
+                    bita.RegistrarEvento(ev);
                     MessageBox.Show(textos["familia_modificada"]);
                 }
 
@@ -273,7 +281,10 @@ namespace ProyectoIS_64PR
 
             try
             {
-                bllRol.EliminarFamilia(nodoSeleccionado.Id);
+                bllfamilia.EliminarFamilia(nodoSeleccionado.Id);
+                BLL_64PR.Bitacora_64PR bita = new BLL_64PR.Bitacora_64PR();
+                Servicios_64PR.Evento_64PR ev = new Evento_64PR(SessionManager.GetInstance.Usuario.Login, ((int)BLL_64PR.Bitacora_64PR.ModuloBitacora_64PR.GestionFamilias).ToString(), ((int)BLL_64PR.Bitacora_64PR.TipoEventoBitacora_64PR.EliminacionFamilia).ToString(), 3);
+                bita.RegistrarEvento(ev);
                 MessageBox.Show(textos["familia_eliminada"]);
                 CargaPermisosYFamilias();
                 treeView2.Nodes.Clear();

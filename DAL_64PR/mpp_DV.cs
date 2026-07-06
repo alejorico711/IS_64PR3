@@ -127,8 +127,8 @@ namespace DAL_64PR
                 });
         }
         /// Compara el DVH calculado vs el guardado fila por fila.
-        /// Devuelve los IdFila que no coinciden (o que directamente no existen en DVH_64PR).
-        public List<string> ObtenerFilasInconsistentes(string nombreTabla, string[] columnasPK)
+        /// Clasifica cada anomalía en Insercion, Modificacion o Eliminacion.
+        public List<FilaInconsistente_64PR> ObtenerFilasInconsistentes(string nombreTabla, string[] columnasPK)
         {
             /// DVH calculado desde los datos actuales
             List<DVH_64PR> calculados = CalcularDVHTabla(nombreTabla, columnasPK);
@@ -141,19 +141,52 @@ namespace DAL_64PR
             };
             DataTable guardados = Acceso.Instancia.leerQuery(query, parametros);
 
-            /// Convertimos a Dictionary para búsqueda
             Dictionary<string, long> dvhGuardados = new Dictionary<string, long>();
             foreach (DataRow fila in guardados.Rows)
                 dvhGuardados[fila["IdFila"].ToString()] = Convert.ToInt64(fila["DVH"]);
 
-            List<string> filasAfectadas = new List<string>();
+            /// Para después saber cuáles de los guardados ya no están en la tabla real
+            HashSet<string> idsVigentes = new HashSet<string>();
+
+            List<FilaInconsistente_64PR> filasAfectadas = new List<FilaInconsistente_64PR>();
+
             foreach (DVH_64PR calculado in calculados)
             {
-                /// Fila que no tiene DVH guardado, o cuyo DVH no coincide
-                if (!dvhGuardados.ContainsKey(calculado.IdFila) ||
-                     dvhGuardados[calculado.IdFila] != calculado.Valor)
+                idsVigentes.Add(calculado.IdFila);
+
+                if (!dvhGuardados.ContainsKey(calculado.IdFila))
                 {
-                    filasAfectadas.Add(calculado.IdFila);
+                    /// Existe en la tabla real pero nunca se guardó su DVH -> alta nueva
+                    filasAfectadas.Add(new FilaInconsistente_64PR
+                    {
+                        Tabla = nombreTabla,
+                        IdFila = calculado.IdFila,
+                        Tipo = TipoAnomalia_64PR.Insercion
+                    });
+                }
+                else if (dvhGuardados[calculado.IdFila] != calculado.Valor)
+                {
+                    /// Existe en ambos lados pero el contenido cambió
+                    filasAfectadas.Add(new FilaInconsistente_64PR
+                    {
+                        Tabla = nombreTabla,
+                        IdFila = calculado.IdFila,
+                        Tipo = TipoAnomalia_64PR.Modificacion
+                    });
+                }
+            }
+
+            /// Lo que estaba guardado pero ya no aparece entre los calculados -> se borró
+            foreach (string idGuardado in dvhGuardados.Keys)
+            {
+                if (!idsVigentes.Contains(idGuardado))
+                {
+                    filasAfectadas.Add(new FilaInconsistente_64PR
+                    {
+                        Tabla = nombreTabla,
+                        IdFila = idGuardado,
+                        Tipo = TipoAnomalia_64PR.Eliminacion
+                    });
                 }
             }
 

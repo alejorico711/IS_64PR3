@@ -32,9 +32,9 @@ namespace BLL_64PR
         }
 
         /// Recorre TODO el catálogo y devuelve la lista de tablas inconsistentes
-        public Dictionary<string, List<string>> VerificarIntegridadCompleta()
+        public Dictionary<string, List<FilaInconsistente_64PR>> VerificarIntegridadCompleta()
         {
-            Dictionary<string, List<string>> resultado = new Dictionary<string, List<string>>();
+            Dictionary<string, List<FilaInconsistente_64PR>> resultado = new Dictionary<string, List<FilaInconsistente_64PR>>();
 
             foreach (var entrada in Tablas)
             {
@@ -43,7 +43,7 @@ namespace BLL_64PR
 
                 if (!VerificarTabla(nombreTabla, columnasPK))
                 {
-                    List<string> filasAfectadas = mpp.ObtenerFilasInconsistentes(nombreTabla, columnasPK);
+                    List<FilaInconsistente_64PR> filasAfectadas = mpp.ObtenerFilasInconsistentes(nombreTabla, columnasPK);
                     resultado[nombreTabla] = filasAfectadas;
                 }
             }
