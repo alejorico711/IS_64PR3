@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace DAL_64PR
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=BD_64PR;Integrated Security=True;TrustServerCertificate=True"; //JULIÁN
+                    conexion.ConnectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }
@@ -224,7 +225,7 @@ namespace DAL_64PR
         public int EjecutarComandoMaster(string query, SqlParameter[] parametros, int timeoutSegundos = 300)
         {
             ///Conexión independiente contra 'master'
-            string connStringMaster = @"Data Source=.\SQLEXPRESS;Initial Catalog=master;Integrated Security=True;TrustServerCertificate=True";
+            string connStringMaster = ConfigurationManager.ConnectionStrings["ConexionMaster"].ConnectionString;
 
             using (SqlConnection conexionMaster = new SqlConnection(connStringMaster))
             {
