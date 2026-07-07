@@ -43,7 +43,8 @@ namespace DAL_64PR
             {
                 if (conexion.State == System.Data.ConnectionState.Closed)
                 {
-                    conexion.ConnectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
+                    //conexion.ConnectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
+                    conexion.ConnectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=BD_64PR;Integrated Security=True;TrustServerCertificate=True";
                     conexion.Open();
                     Console.WriteLine("Conexión exitosa");
                 }
@@ -225,8 +226,8 @@ namespace DAL_64PR
         public int EjecutarComandoMaster(string query, SqlParameter[] parametros, int timeoutSegundos = 300)
         {
             ///Conexión independiente contra 'master'
-            string connStringMaster = ConfigurationManager.ConnectionStrings["ConexionMaster"].ConnectionString;
-
+            //string connStringMaster = ConfigurationManager.ConnectionStrings["ConexionMaster"].ConnectionString;
+            string connStringMaster = @"Data Source=.\SQLEXPRESS;Initial Catalog=BD_64PR;Integrated Security=True;TrustServerCertificate=True";
             using (SqlConnection conexionMaster = new SqlConnection(connStringMaster))
             {
                 conexionMaster.Open();
